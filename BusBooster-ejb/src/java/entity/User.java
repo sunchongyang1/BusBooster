@@ -29,6 +29,16 @@ public class User implements Serializable {
     private Long currentOnBusId;
     private Long currentAtStopId;
     private Boolean onBoard;
+    
+    public User(){}
+    
+    public User(String username, String email, String password) {
+        this.setUsername(username);
+        this.setEmail(email);
+        this.setPassword(password);
+        this.setContributionPoint(0.0);
+        this.setOnBoard(Boolean.FALSE);
+    }
 
     public Long getId() {
         return id;
@@ -61,6 +71,104 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return "entity.User[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * @param username the username to set
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * @param email the email to set
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * @return the password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    /**
+     * @return the contributionPoint
+     */
+    public Double getContributionPoint() {
+        return contributionPoint;
+    }
+
+    /**
+     * @param contributionPoint the contributionPoint to set
+     */
+    public void setContributionPoint(Double contributionPoint) {
+        this.contributionPoint = contributionPoint;
+    }
+
+    /**
+     * @return the currentOnBusId
+     */
+    public Long getCurrentOnBusId() {
+        return currentOnBusId;
+    }
+
+    /**
+     * @param currentOnBusId the currentOnBusId to set
+     */
+    public void setCurrentOnBusId(Long currentOnBusId) {
+        this.currentOnBusId = currentOnBusId;
+    }
+
+    /**
+     * @return the currentAtStopId
+     */
+    public Long getCurrentAtStopId() {
+        return currentAtStopId;
+    }
+
+    /**
+     * @param currentAtStopId the currentAtStopId to set
+     */
+    public void setCurrentAtStopId(Long currentAtStopId) {
+        this.currentAtStopId = currentAtStopId;
+    }
+
+    /**
+     * @return the onBoard
+     */
+    public Boolean getOnBoard() {
+        return onBoard;
+    }
+
+    /**
+     * @param onBoard the onBoard to set
+     */
+    public void setOnBoard(Boolean onBoard) {
+        this.onBoard = onBoard;
     }
     
 }

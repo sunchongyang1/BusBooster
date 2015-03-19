@@ -30,6 +30,8 @@ public class BusStop implements Serializable {
     private Long previousStopId;
     private Double distanceToNextStop;
     private Double distanceToPreviousStop;
+    
+    public BusStop(){}
 
     public Long getId() {
         return id;
@@ -62,6 +64,118 @@ public class BusStop implements Serializable {
     @Override
     public String toString() {
         return "entity.BusStop[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the busStopName
+     */
+    public String getBusStopName() {
+        return busStopName;
+    }
+
+    /**
+     * @param busStopName the busStopName to set
+     */
+    public void setBusStopName(String busStopName) {
+        this.busStopName = busStopName;
+    }
+
+    /**
+     * @return the busStopNo
+     */
+    public String getBusStopNo() {
+        return busStopNo;
+    }
+
+    /**
+     * @param busStopNo the busStopNo to set
+     */
+    public void setBusStopNo(String busStopNo) {
+        this.busStopNo = busStopNo;
+    }
+
+    /**
+     * @return the longtitude
+     */
+    public Double getLongtitude() {
+        return longtitude;
+    }
+
+    /**
+     * @param longtitude the longtitude to set
+     */
+    public void setLongtitude(Double longtitude) {
+        this.longtitude = longtitude;
+    }
+
+    /**
+     * @return the latitude
+     */
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    /**
+     * @param latitude the latitude to set
+     */
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    /**
+     * @return the nextStopId
+     */
+    public Long getNextStopId() {
+        return nextStopId;
+    }
+
+    /**
+     * @param nextStopId the nextStopId to set
+     */
+    public void setNextStopId(Long nextStopId) {
+        this.nextStopId = nextStopId;
+    }
+
+    /**
+     * @return the previousStopId
+     */
+    public Long getPreviousStopId() {
+        return previousStopId;
+    }
+
+    /**
+     * @param previousStopId the previousStopId to set
+     */
+    public void setPreviousStopId(Long previousStopId) {
+        this.previousStopId = previousStopId;
+    }
+
+    /**
+     * @return the distanceToNextStop
+     */
+    public Double getDistanceToNextStop() {
+        return distanceToNextStop;
+    }
+
+    /**
+     * @param distanceToNextStop the distanceToNextStop to set
+     */
+    public void setDistanceToNextStop(Double distanceToNextStop) {
+        this.distanceToNextStop = distanceToNextStop;
+    }
+
+    /**
+     * @return the distanceToPreviousStop
+     */
+    public Double getDistanceToPreviousStop() {
+        return distanceToPreviousStop;
+    }
+
+    /**
+     * @param distanceToPreviousStop the distanceToPreviousStop to set
+     */
+    public void setDistanceToPreviousStop(Double distanceToPreviousStop) {
+        this.distanceToPreviousStop = distanceToPreviousStop;
     }
     
 }

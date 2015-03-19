@@ -5,6 +5,8 @@
  */
 package session;
 
+import entity.Bus;
+import java.sql.Timestamp;
 import javax.ejb.Local;
 
 /**
@@ -13,5 +15,7 @@ import javax.ejb.Local;
  */
 @Local
 public interface BusManagementSessionBeanLocal {
-    
+    public Bus register(String busNo, String plateNo, Double longtitude, Double latitude, Timestamp lastUpdateTime, Long previousStopId);
+    public Boolean update(Long busId, String busNo, String plateNo, Double longtitude, Double latitude, Double speed, Timestamp lastUpdateTime);
+    public Boolean remove(Long busId);
 }

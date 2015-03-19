@@ -5,7 +5,8 @@
  */
 package session;
 
-import entity.User;
+import entity.BusData;
+import java.sql.Timestamp;
 import javax.ejb.Local;
 
 /**
@@ -13,6 +14,6 @@ import javax.ejb.Local;
  * @author chongyangsun
  */
 @Local
-public interface UserManagementSessionBeanLocal {
-    public User registration(String username, String password, String passwordCheck, String email);
+public interface DataManagementSessionBeanLocal {
+    public BusData updateRecord(String busNo, String plateNo, Double Longtitude, Double Latitude, Double speed);
 }

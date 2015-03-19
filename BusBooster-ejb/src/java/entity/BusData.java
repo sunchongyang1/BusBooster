@@ -17,7 +17,7 @@ import javax.persistence.Id;
  * @author chongyangsun
  */
 @Entity
-public class Bus implements Serializable {
+public class BusData implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,24 +28,20 @@ public class Bus implements Serializable {
     private Double Longtitude;
     private Double Latitude;
     private Double speed;
-    private Timestamp lastUpdateTime;
-    private Long previousStopId;
-    private Long nextStopId;
-    private Timestamp timeLeftLastStop;
-    private Double distanceFromPreviousStop;
-    private Double distanceToNextStop;
+    private Timestamp time;
     
-    private Double delay;
+    private Boolean archived;
     
-    public Bus(){}
+    public BusData(){}
     
-    public Bus(String busNo, String plateNo, Double Longtitude, Double Latitude, Timestamp lastUpdateTime, Long previousStopId){
+    public BusData(String busNo, String plateNo, Double longtitude, Double latitude, Double speed, Timestamp time){
         this.setBusNo(busNo);
         this.setPlateNo(plateNo);
-        this.setLongtitude(Longtitude);
-        this.setLatitude(Latitude);
-        this.setLastUpdateTime(lastUpdateTime);
-        this.setPreviousStopId(previousStopId);
+        this.setLongtitude(longtitude);
+        this.setLatitude(latitude);
+        this.setSpeed(speed);
+        this.setTime(time);
+        this.setArchived(Boolean.FALSE);
     }
 
     public Long getId() {
@@ -66,10 +62,10 @@ public class Bus implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Bus)) {
+        if (!(object instanceof BusData)) {
             return false;
         }
-        Bus other = (Bus) object;
+        BusData other = (BusData) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -152,101 +148,31 @@ public class Bus implements Serializable {
     }
 
     /**
-     * @return the lastUpdateTime
+     * @return the time
      */
-    public Timestamp getLastUpdateTime() {
-        return lastUpdateTime;
+    public Timestamp getTime() {
+        return time;
     }
 
     /**
-     * @param lastUpdateTime the lastUpdateTime to set
+     * @param time the time to set
      */
-    public void setLastUpdateTime(Timestamp lastUpdateTime) {
-        this.lastUpdateTime = lastUpdateTime;
+    public void setTime(Timestamp time) {
+        this.time = time;
     }
 
     /**
-     * @return the previousStopId
+     * @return the archived
      */
-    public Long getPreviousStopId() {
-        return previousStopId;
+    public Boolean getArchived() {
+        return archived;
     }
 
     /**
-     * @param previousStopId the previousStopId to set
+     * @param archived the archived to set
      */
-    public void setPreviousStopId(Long previousStopId) {
-        this.previousStopId = previousStopId;
-    }
-
-    /**
-     * @return the nextStopId
-     */
-    public Long getNextStopId() {
-        return nextStopId;
-    }
-
-    /**
-     * @param nextStopId the nextStopId to set
-     */
-    public void setNextStopId(Long nextStopId) {
-        this.nextStopId = nextStopId;
-    }
-
-    /**
-     * @return the timeLeftLastStop
-     */
-    public Timestamp getTimeLeftLastStop() {
-        return timeLeftLastStop;
-    }
-
-    /**
-     * @param timeLeftLastStop the timeLeftLastStop to set
-     */
-    public void setTimeLeftLastStop(Timestamp timeLeftLastStop) {
-        this.timeLeftLastStop = timeLeftLastStop;
-    }
-
-    /**
-     * @return the distanceFromPreviousStop
-     */
-    public Double getDistanceFromPreviousStop() {
-        return distanceFromPreviousStop;
-    }
-
-    /**
-     * @param distanceFromPreviousStop the distanceFromPreviousStop to set
-     */
-    public void setDistanceFromPreviousStop(Double distanceFromPreviousStop) {
-        this.distanceFromPreviousStop = distanceFromPreviousStop;
-    }
-
-    /**
-     * @return the distanceToNextStop
-     */
-    public Double getDistanceToNextStop() {
-        return distanceToNextStop;
-    }
-
-    /**
-     * @param distanceToNextStop the distanceToNextStop to set
-     */
-    public void setDistanceToNextStop(Double distanceToNextStop) {
-        this.distanceToNextStop = distanceToNextStop;
-    }
-
-    /**
-     * @return the delay
-     */
-    public Double getDelay() {
-        return delay;
-    }
-
-    /**
-     * @param delay the delay to set
-     */
-    public void setDelay(Double delay) {
-        this.delay = delay;
+    public void setArchived(Boolean archived) {
+        this.archived = archived;
     }
     
 }

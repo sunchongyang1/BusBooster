@@ -5,7 +5,14 @@
  */
 package session;
 
+import entity.Bus;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -13,7 +20,68 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class BusManagementSessionBean implements BusManagementSessionBeanLocal {
-
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    
+    @PersistenceContext
+    private EntityManager em;
+    
+    @Override
+    public Bus register(String busNo, String plateNo, Double longtitude, Double latitude, Timestamp lastUpdateTime, Long previousStopId) {
+        try {
+            Bus bus = new Bus(busNo, plateNo, longtitude, latitude, lastUpdateTime, previousStopId);
+            em.persist(bus);
+            return bus;
+        } catch (Exception e) {
+            System.out.println("Error regsiter bus");
+            return null;
+        }
+        
+    }
+    
+    @Override
+    public Boolean update(Long busId, String busNo, String plateNo, Double longtitude, Double latitude, Double speed, Timestamp lastUpdateTime) {
+        //calculate arrival time here, record arrival and delay
+        
+        Query query = em.createQuery("SELECT b FROM Bus b WHERE b.id=:busId");
+        query.setParameter("busId", busId);
+        List<Bus> busList = new ArrayList(query.getResultList());
+        if(busList.isEmpty()) {
+            System.out.println("Cannot find bus");
+            return false;
+        }
+        Bus bus = busList.get(0);
+        
+        if(busNo != null && !bus.getBusNo().equals(busNo)) {
+            System.out.println("BusNo does not match");
+            return false;
+        }
+        
+        if(plateNo != null && !bus.getPlateNo().equals(plateNo)) {
+            System.out.println("PlateNo does not exist");
+            return false;
+        }
+        
+        if(longtitude != bus.getLatitude()) {
+            bus.setLongtitude(longtitude);
+            System.out.println("longtitude updated!");
+        }
+        
+        if(latitude != bus.getLatitude()) {
+            bus.setLatitude(latitude);
+            System.out.println("latitude updated!");
+        }
+        
+        
+        
+        if(bus.getLastUpdateTime().before(lastUpdateTime)) {
+            bus.setLastUpdateTime(lastUpdateTime);
+            System.out.println("Last update time updated!");
+        }
+        
+        return true;
+    }
+    
+    @Override
+    public Boolean remove(Long busId) {
+        return false;
+    }
 }

@@ -5,6 +5,7 @@
  */
 package session;
 
+import entity.User;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,7 +21,19 @@ public class UserManagementSessionBean implements UserManagementSessionBeanLocal
     private EntityManager em;
     
     @Override
-    public Boolean registration(String username, String password, String passwordCheck, String email) {
-        return false;
+    public User registration(String username, String password, String passwordCheck, String email) {
+        if(password.equals(passwordCheck)) {
+            try {
+                User user = new User(username, email, password);
+                em.persist(user);
+                return user;
+            } catch(Exception e) {
+                System.out.println("Problem signing up");
+                return null;
+            }
+            
+        } else {
+            return null;
+        }
     }
 }

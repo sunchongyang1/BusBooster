@@ -16,7 +16,7 @@ import javax.persistence.Id;
  * @author chongyangsun
  */
 @Entity
-public class BusStopDistance implements Serializable {
+public class Route implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,14 +25,6 @@ public class BusStopDistance implements Serializable {
     private Long startBusStopId;
     private Long endBusStopId;
     private Double distance;
-    
-    public BusStopDistance(){}
-    
-    public BusStopDistance(Long start, Long end, Double distance) {
-        this.setStartBusStopId(start);
-        this.setEndBusStopId(end);
-        this.setDistance(distance);
-    }
 
     public Long getId() {
         return id;
@@ -52,10 +44,10 @@ public class BusStopDistance implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof BusStopDistance)) {
+        if (!(object instanceof Route)) {
             return false;
         }
-        BusStopDistance other = (BusStopDistance) object;
+        Route other = (Route) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -64,7 +56,7 @@ public class BusStopDistance implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.BusStopDistance[ id=" + id + " ]";
+        return "entity.Route[ id=" + id + " ]";
     }
 
     /**
