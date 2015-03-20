@@ -8,6 +8,7 @@ package session;
 import entity.BusData;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -30,5 +31,13 @@ public class DataManagementSessionBean implements DataManagementSessionBeanLocal
         em.persist(busData);
         return busData;
         
+    }
+    
+    public Boolean archiveData(List<BusData> busDataList) {
+        for(BusData b: busDataList) {
+            b.setArchived(Boolean.TRUE);
+        }
+        em.persist(busDataList);
+        return true;
     }
 }

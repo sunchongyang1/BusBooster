@@ -5,8 +5,6 @@
  */
 package session;
 
-import entity.BusData;
-import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -14,6 +12,7 @@ import javax.ejb.Local;
  * @author chongyangsun
  */
 @Local
-public interface PredictionManagementSessionBeanLocal {
-    public void updateArrivalTime(List<BusData> busDataList);
+public interface ServerManagementSessionBeanLocal {
+    public void startServer();
+    public void stopServer();
 }

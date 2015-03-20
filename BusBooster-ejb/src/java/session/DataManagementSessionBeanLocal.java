@@ -7,6 +7,7 @@ package session;
 
 import entity.BusData;
 import java.sql.Timestamp;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -16,4 +17,6 @@ import javax.ejb.Local;
 @Local
 public interface DataManagementSessionBeanLocal {
     public BusData updateRecord(String busNo, String plateNo, Double Longtitude, Double Latitude, Double speed);
+    
+    public Boolean archiveData(List<BusData> busDataList);
 }
