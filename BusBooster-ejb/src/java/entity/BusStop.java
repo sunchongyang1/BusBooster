@@ -27,9 +27,12 @@ public class BusStop implements Serializable {
     private Double longtitude;
     private Double latitude;
     private Long nextStopId;
+    private String nextStopName;
     private Long previousStopId;
     private Double distanceToNextStop;
     private Double distanceToPreviousStop;
+    
+    private Boolean terminal;
     
     public BusStop(){}
 
@@ -176,6 +179,34 @@ public class BusStop implements Serializable {
      */
     public void setDistanceToPreviousStop(Double distanceToPreviousStop) {
         this.distanceToPreviousStop = distanceToPreviousStop;
+    }
+
+    /**
+     * @return the terminal
+     */
+    public Boolean getTerminal() {
+        return terminal;
+    }
+
+    /**
+     * @param terminal the terminal to set
+     */
+    public void setTerminal(Boolean terminal) {
+        this.terminal = terminal;
+    }
+
+    /**
+     * @return the nextStopName
+     */
+    public String getNextStopName() {
+        return nextStopName;
+    }
+
+    /**
+     * @param nextStopName the nextStopName to set
+     */
+    public void setNextStopName(String nextStopName) {
+        this.nextStopName = nextStopName;
     }
     
 }

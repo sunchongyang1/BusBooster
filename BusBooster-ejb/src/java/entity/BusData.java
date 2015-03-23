@@ -25,11 +25,14 @@ public class BusData implements Serializable {
     
     private String busNo;
     private String plateNo;
-    private Double Longtitude;
-    private Double Latitude;
+    private Long busId;
+    private Double longtitude;
+    private Double latitude;
     private Double speed;
     private Timestamp time;
     
+    private Boolean newBus;
+    private Boolean newUser;
     private Boolean archived;
     
     public BusData(){}
@@ -41,6 +44,19 @@ public class BusData implements Serializable {
         this.setLatitude(latitude);
         this.setSpeed(speed);
         this.setTime(time);
+        this.setNewBus(Boolean.TRUE);
+        this.setArchived(Boolean.FALSE);
+    }
+    
+    public BusData(Long busId, String busNo, String plateNo, Double longtitude, Double latitude, Double speed, Timestamp time){
+        this.setBusId(busId);
+        this.setBusNo(busNo);
+        this.setPlateNo(plateNo);
+        this.setLongtitude(longtitude);
+        this.setLatitude(latitude);
+        this.setSpeed(speed);
+        this.setTime(time);
+        this.setNewBus(Boolean.FALSE);
         this.setArchived(Boolean.FALSE);
     }
 
@@ -106,34 +122,6 @@ public class BusData implements Serializable {
     }
 
     /**
-     * @return the Longtitude
-     */
-    public Double getLongtitude() {
-        return Longtitude;
-    }
-
-    /**
-     * @param Longtitude the Longtitude to set
-     */
-    public void setLongtitude(Double Longtitude) {
-        this.Longtitude = Longtitude;
-    }
-
-    /**
-     * @return the Latitude
-     */
-    public Double getLatitude() {
-        return Latitude;
-    }
-
-    /**
-     * @param Latitude the Latitude to set
-     */
-    public void setLatitude(Double Latitude) {
-        this.Latitude = Latitude;
-    }
-
-    /**
      * @return the speed
      */
     public Double getSpeed() {
@@ -173,6 +161,76 @@ public class BusData implements Serializable {
      */
     public void setArchived(Boolean archived) {
         this.archived = archived;
+    }
+
+    /**
+     * @return the busId
+     */
+    public Long getBusId() {
+        return busId;
+    }
+
+    /**
+     * @param busId the busId to set
+     */
+    public void setBusId(Long busId) {
+        this.busId = busId;
+    }
+
+    /**
+     * @return the newBus
+     */
+    public Boolean getNewBus() {
+        return newBus;
+    }
+
+    /**
+     * @param newBus the newBus to set
+     */
+    public void setNewBus(Boolean newBus) {
+        this.newBus = newBus;
+    }
+
+    /**
+     * @return the newUser
+     */
+    public Boolean getNewUser() {
+        return newUser;
+    }
+
+    /**
+     * @param newUser the newUser to set
+     */
+    public void setNewUser(Boolean newUser) {
+        this.newUser = newUser;
+    }
+
+    /**
+     * @return the longtitude
+     */
+    public Double getLongtitude() {
+        return longtitude;
+    }
+
+    /**
+     * @param longtitude the longtitude to set
+     */
+    public void setLongtitude(Double longtitude) {
+        this.longtitude = longtitude;
+    }
+
+    /**
+     * @return the latitude
+     */
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    /**
+     * @param latitude the latitude to set
+     */
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
     
 }

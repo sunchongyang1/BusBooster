@@ -28,6 +28,11 @@ public class BusManagementSessionBean implements BusManagementSessionBeanLocal {
     public Bus register(String busNo, String plateNo, Double longtitude, Double latitude, Timestamp lastUpdateTime, Long previousStopId) {
         try {
             Bus bus = new Bus(busNo, plateNo, longtitude, latitude, lastUpdateTime, previousStopId);
+            Query q = em.createQuery("SELECT b FROM BusStopDistance b WHERE b.startBusStopId=:start AND b.endBusStopId=:end");
+            q.setParameter("start", previousStopId);
+            q.setParameter("end", previousStopId+1);
+            bus.setDistanceToNextStop((Double)q.getSingleResult());
+            bus.setDelay(0.0);
             em.persist(bus);
             return bus;
         } catch (Exception e) {

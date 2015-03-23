@@ -25,27 +25,37 @@ public class Bus implements Serializable {
     
     private String busNo;
     private String plateNo;
-    private Double Longtitude;
-    private Double Latitude;
+    private Double longtitude;
+    private Double latitude;
     private Double speed;
     private Timestamp lastUpdateTime;
     private Long previousStopId;
+    private String previousStopName;
     private Long nextStopId;
+    private String nextStopName;
     private Timestamp timeLeftLastStop;
     private Double distanceFromPreviousStop;
     private Double distanceToNextStop;
     
+    private Double arrivalTime; // to next stop
+    private Timestamp scheduledArrivingTime;
     private Double delay;
+    
+    private Double previousRouteTravelTime;
     
     public Bus(){}
     
-    public Bus(String busNo, String plateNo, Double Longtitude, Double Latitude, Timestamp lastUpdateTime, Long previousStopId){
+    public Bus(String busNo, String plateNo, Double longtitude, Double latitude, Timestamp lastUpdateTime, Long previousStopId){
         this.setBusNo(busNo);
         this.setPlateNo(plateNo);
-        this.setLongtitude(Longtitude);
-        this.setLatitude(Latitude);
+        this.setLongtitude(longtitude);
+        this.setLatitude(latitude);
         this.setLastUpdateTime(lastUpdateTime);
+        this.setTimeLeftLastStop(lastUpdateTime);
         this.setPreviousStopId(previousStopId);
+        this.setNextStopId(previousStopId+1);
+        this.setSpeed(0.0);
+        this.setDistanceFromPreviousStop(0.0);
     }
 
     public Long getId() {
@@ -107,34 +117,6 @@ public class Bus implements Serializable {
      */
     public void setPlateNo(String plateNo) {
         this.plateNo = plateNo;
-    }
-
-    /**
-     * @return the Longtitude
-     */
-    public Double getLongtitude() {
-        return Longtitude;
-    }
-
-    /**
-     * @param Longtitude the Longtitude to set
-     */
-    public void setLongtitude(Double Longtitude) {
-        this.Longtitude = Longtitude;
-    }
-
-    /**
-     * @return the Latitude
-     */
-    public Double getLatitude() {
-        return Latitude;
-    }
-
-    /**
-     * @param Latitude the Latitude to set
-     */
-    public void setLatitude(Double Latitude) {
-        this.Latitude = Latitude;
     }
 
     /**
@@ -247,6 +229,104 @@ public class Bus implements Serializable {
      */
     public void setDelay(Double delay) {
         this.delay = delay;
+    }
+
+    /**
+     * @return the previousStopName
+     */
+    public String getPreviousStopName() {
+        return previousStopName;
+    }
+
+    /**
+     * @param previousStopName the previousStopName to set
+     */
+    public void setPreviousStopName(String previousStopName) {
+        this.previousStopName = previousStopName;
+    }
+
+    /**
+     * @return the nextStopName
+     */
+    public String getNextStopName() {
+        return nextStopName;
+    }
+
+    /**
+     * @param nextStopName the nextStopName to set
+     */
+    public void setNextStopName(String nextStopName) {
+        this.nextStopName = nextStopName;
+    }
+
+    /**
+     * @return the arrivalTime
+     */
+    public Double getArrivalTime() {
+        return arrivalTime;
+    }
+
+    /**
+     * @param arrivalTime the arrivalTime to set
+     */
+    public void setArrivalTime(Double arrivalTime) {
+        this.arrivalTime = arrivalTime;
+    }
+
+    /**
+     * @return the longtitude
+     */
+    public Double getLongtitude() {
+        return longtitude;
+    }
+
+    /**
+     * @param longtitude the longtitude to set
+     */
+    public void setLongtitude(Double longtitude) {
+        this.longtitude = longtitude;
+    }
+
+    /**
+     * @return the latitude
+     */
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    /**
+     * @param latitude the latitude to set
+     */
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    /**
+     * @return the previousRouteTravelTime
+     */
+    public Double getPreviousRouteTravelTime() {
+        return previousRouteTravelTime;
+    }
+
+    /**
+     * @param previousRouteTravelTime the previousRouteTravelTime to set
+     */
+    public void setPreviousRouteTravelTime(Double previousRouteTravelTime) {
+        this.previousRouteTravelTime = previousRouteTravelTime;
+    }
+
+    /**
+     * @return the scheduledArrivingTime
+     */
+    public Timestamp getScheduledArrivingTime() {
+        return scheduledArrivingTime;
+    }
+
+    /**
+     * @param scheduledArrivingTime the scheduledArrivingTime to set
+     */
+    public void setScheduledArrivingTime(Timestamp scheduledArrivingTime) {
+        this.scheduledArrivingTime = scheduledArrivingTime;
     }
     
 }
