@@ -32,29 +32,29 @@ public class DataManagementSessionBean implements DataManagementSessionBeanLocal
     BusManagementSessionBeanLocal bmsbl;
 
     @Override
-    public BusData updateRecord(Long busId, String busNo, String plateNo, Double longtitude, Double latitude, Double speed) {
+    public BusData updateRecord(Long busId, String busNo, String direction, Double longitude, Double latitude, Double speed) {
         // this is a web service. return the busid as a success reply
         Date now = new Date();
         Timestamp time = new Timestamp(now.getTime());
         // if new bus then register bus first. do not wait for server to process the request.
         if (busId == null) {
-            if (checkIfNewUser(busNo, latitude, longtitude) != null) {
+            if (checkIfNewUser(busNo, latitude, longitude) != null) {
                 // new user on registered bus, find the bus id and return
-                BusData busData = new BusData(busId, busNo, plateNo, longtitude, latitude, speed, time);
+                BusData busData = new BusData(busId, busNo, direction, longitude, latitude, speed, time);
                 em.persist(busData);
                 return busData;
             } else {
                 // new user on unregistered bus, register new bus and return
                 // find the location of user, at one of the bus stops
-                BusStop busStop = this.findBusStop(latitude, longtitude);
-                Bus bus = bmsbl.register(busNo, plateNo, longtitude, latitude, time, busStop.getId());
+                BusStop busStop = this.findBusStop(latitude, longitude);
+                Bus bus = bmsbl.register(busNo, direction, longitude, latitude, time, busStop.getId());
                 
-                BusData busData = new BusData(bus.getId(), busNo, plateNo, longtitude, latitude, speed, time);
+                BusData busData = new BusData(bus.getId(), busNo, direction, longitude, latitude, speed, time);
                 em.persist(busData);
                 return busData;
             }
         } else {
-            BusData busData = new BusData(busId, busNo, plateNo, longtitude, latitude, speed, time);
+            BusData busData = new BusData(busId, busNo, direction, longitude, latitude, speed, time);
             em.persist(busData);
             return busData;
 
@@ -71,7 +71,7 @@ public class DataManagementSessionBean implements DataManagementSessionBeanLocal
     }
     
     private BusStop findBusStop(Double lat, Double lon) {
-        Query q = em.createQuery("SELECT b FROM BusStop b WHERE b.latitude>:lat1 AND b.latitude<:lat2 AND b.longtitude>:lon1 AND b.longtitude<:lon2");
+        Query q = em.createQuery("SELECT b FROM BusStop b WHERE b.latitude>:lat1 AND b.latitude<:lat2 AND b.longitude>:lon1 AND b.longitude<:lon2");
         q.setParameter("lat1", lat - 0.01);
         q.setParameter("lat2", lat + 0.01);
         q.setParameter("lon1", lon - 0.01);
@@ -81,11 +81,11 @@ public class DataManagementSessionBean implements DataManagementSessionBeanLocal
             return null;
         }
         if (busStopList.size() > 1) {
-            Double distance = this.calculateDistance(lat, lon, busStopList.get(0).getLatitude(), busStopList.get(0).getLongtitude());
+            Double distance = this.calculateDistance(lat, lon, busStopList.get(0).getLatitude(), busStopList.get(0).getLongitude());
             int i;
             int min = 0;
             for (i = 1; i < busStopList.size(); i++) {
-                Double temp = this.calculateDistance(lat, lon, busStopList.get(i).getLatitude(), busStopList.get(i).getLongtitude());
+                Double temp = this.calculateDistance(lat, lon, busStopList.get(i).getLatitude(), busStopList.get(i).getLongitude());
                 if (temp < distance) {
                     distance = temp;
                     min = i;
@@ -98,7 +98,7 @@ public class DataManagementSessionBean implements DataManagementSessionBeanLocal
     }
 
     private Long checkIfNewUser(String busNo, Double lat, Double lon) {
-        Query q = em.createQuery("SELECT b FROM Bus b WHERE b.busNo=:bno AND b.latitude>:lat1 AND b.latitude<:lat2 AND b.longtitude>:lon1 AND b.longtitude<:lon2");
+        Query q = em.createQuery("SELECT b FROM Bus b WHERE b.busNo=:bno AND b.latitude>:lat1 AND b.latitude<:lat2 AND b.longitude>:lon1 AND b.longitude<:lon2");
         q.setParameter("bno", busNo);
         q.setParameter("lat1", lat - 0.01);
         q.setParameter("lat2", lat + 0.01);
@@ -109,11 +109,11 @@ public class DataManagementSessionBean implements DataManagementSessionBeanLocal
             return null;
         }
         if (busList.size() > 1) {
-            Double distance = this.calculateDistance(lat, lon, busList.get(0).getLatitude(), busList.get(0).getLongtitude());
+            Double distance = this.calculateDistance(lat, lon, busList.get(0).getLatitude(), busList.get(0).getLongitude());
             int i;
             int min = 0;
             for (i = 1; i < busList.size(); i++) {
-                Double temp = this.calculateDistance(lat, lon, busList.get(i).getLatitude(), busList.get(i).getLongtitude());
+                Double temp = this.calculateDistance(lat, lon, busList.get(i).getLatitude(), busList.get(i).getLongitude());
                 if (temp < distance) {
                     distance = temp;
                     min = i;

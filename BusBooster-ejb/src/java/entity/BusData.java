@@ -24,9 +24,10 @@ public class BusData implements Serializable {
     private Long id;
     
     private String busNo;
-    private String plateNo;
+    private String plateNo;//no use currently
+    private String direction;
     private Long busId;
-    private Double longtitude;
+    private Double longitude;
     private Double latitude;
     private Double speed;
     private Timestamp time;
@@ -37,10 +38,10 @@ public class BusData implements Serializable {
     
     public BusData(){}
     
-    public BusData(String busNo, String plateNo, Double longtitude, Double latitude, Double speed, Timestamp time){
+    public BusData(String busNo, String direction, Double longitude, Double latitude, Double speed, Timestamp time){
         this.setBusNo(busNo);
-        this.setPlateNo(plateNo);
-        this.setLongtitude(longtitude);
+        this.setDirection(direction);
+        this.setLongitude(longitude);
         this.setLatitude(latitude);
         this.setSpeed(speed);
         this.setTime(time);
@@ -48,11 +49,11 @@ public class BusData implements Serializable {
         this.setArchived(Boolean.FALSE);
     }
     
-    public BusData(Long busId, String busNo, String plateNo, Double longtitude, Double latitude, Double speed, Timestamp time){
+    public BusData(Long busId, String busNo, String direction, Double longitude, Double latitude, Double speed, Timestamp time){
         this.setBusId(busId);
         this.setBusNo(busNo);
-        this.setPlateNo(plateNo);
-        this.setLongtitude(longtitude);
+        this.setDirection(direction);
+        this.setLongitude(longitude);
         this.setLatitude(latitude);
         this.setSpeed(speed);
         this.setTime(time);
@@ -206,17 +207,17 @@ public class BusData implements Serializable {
     }
 
     /**
-     * @return the longtitude
+     * @return the longitude
      */
-    public Double getLongtitude() {
-        return longtitude;
+    public Double getLongitude() {
+        return longitude;
     }
 
     /**
-     * @param longtitude the longtitude to set
+     * @param longitude the longitude to set
      */
-    public void setLongtitude(Double longtitude) {
-        this.longtitude = longtitude;
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     /**
@@ -231,6 +232,20 @@ public class BusData implements Serializable {
      */
     public void setLatitude(Double latitude) {
         this.latitude = latitude;
+    }
+
+    /**
+     * @return the direction
+     */
+    public String getDirection() {
+        return direction;
+    }
+
+    /**
+     * @param direction the direction to set
+     */
+    public void setDirection(String direction) {
+        this.direction = direction;
     }
     
 }

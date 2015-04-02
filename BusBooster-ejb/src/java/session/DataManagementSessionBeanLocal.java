@@ -16,7 +16,7 @@ import javax.ejb.Local;
  */
 @Local
 public interface DataManagementSessionBeanLocal {
-    public BusData updateRecord(Long busId, String busNo, String plateNo, Double Longtitude, Double Latitude, Double speed);
+    public BusData updateRecord(Long busId, String busNo, String direction, Double Longitude, Double Latitude, Double speed);
     
     public Boolean archiveData(List<BusData> busDataList);
 }

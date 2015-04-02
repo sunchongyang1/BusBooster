@@ -24,7 +24,7 @@ public class BusStop implements Serializable {
     
     private String busStopName;
     private String busStopNo;
-    private Double longtitude;
+    private Double longitude;
     private Double latitude;
     private Long nextStopId;
     private String nextStopName;
@@ -98,17 +98,17 @@ public class BusStop implements Serializable {
     }
 
     /**
-     * @return the longtitude
+     * @return the longitude
      */
-    public Double getLongtitude() {
-        return longtitude;
+    public Double getLongitude() {
+        return longitude;
     }
 
     /**
-     * @param longtitude the longtitude to set
+     * @param longitude the longitude to set
      */
-    public void setLongtitude(Double longtitude) {
-        this.longtitude = longtitude;
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     /**

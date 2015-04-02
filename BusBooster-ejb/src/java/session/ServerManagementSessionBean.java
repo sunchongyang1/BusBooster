@@ -81,8 +81,8 @@ public class ServerManagementSessionBean implements ServerManagementSessionBeanL
 
                     for (j = i + 1; j < busDataList.size(); j++) {
                         if (!busDataList.get(j).getArchived() && busDataList.get(j).getBusNo().equals(busDataList.get(i).getBusNo())
-                                && this.calculateDistance(busDataList.get(j).getLatitude(), busDataList.get(j).getLongtitude(),
-                                        busDataList.get(i).getLatitude(), busDataList.get(i).getLongtitude()) <= 10.0) {
+                                && this.calculateDistance(busDataList.get(j).getLatitude(), busDataList.get(j).getLongitude(),
+                                        busDataList.get(i).getLatitude(), busDataList.get(i).getLongitude()) <= 10.0) {
                             temp.add(busDataList.get(j));
                         } // 0 tolerant for no bus no, future development to accommodate user who does not enter bus no.
                     }

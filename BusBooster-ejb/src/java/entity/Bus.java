@@ -24,8 +24,9 @@ public class Bus implements Serializable {
     private Long id;
     
     private String busNo;
-    private String plateNo;
-    private Double longtitude;
+    private String plateNo;//no use currently
+    private String direction;
+    private Double longitude;
     private Double latitude;
     private Double speed;
     private Timestamp lastUpdateTime;
@@ -45,10 +46,10 @@ public class Bus implements Serializable {
     
     public Bus(){}
     
-    public Bus(String busNo, String plateNo, Double longtitude, Double latitude, Timestamp lastUpdateTime, Long previousStopId){
+    public Bus(String busNo, String direction, Double longitude, Double latitude, Timestamp lastUpdateTime, Long previousStopId){
         this.setBusNo(busNo);
-        this.setPlateNo(plateNo);
-        this.setLongtitude(longtitude);
+        this.setDirection(direction);
+        this.setLongitude(longitude);
         this.setLatitude(latitude);
         this.setLastUpdateTime(lastUpdateTime);
         this.setTimeLeftLastStop(lastUpdateTime);
@@ -274,17 +275,17 @@ public class Bus implements Serializable {
     }
 
     /**
-     * @return the longtitude
+     * @return the longitude
      */
-    public Double getLongtitude() {
-        return longtitude;
+    public Double getLongitude() {
+        return longitude;
     }
 
     /**
-     * @param longtitude the longtitude to set
+     * @param longitude the longitude to set
      */
-    public void setLongtitude(Double longtitude) {
-        this.longtitude = longtitude;
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     /**
@@ -327,6 +328,20 @@ public class Bus implements Serializable {
      */
     public void setScheduledArrivingTime(Timestamp scheduledArrivingTime) {
         this.scheduledArrivingTime = scheduledArrivingTime;
+    }
+
+    /**
+     * @return the direction
+     */
+    public String getDirection() {
+        return direction;
+    }
+
+    /**
+     * @param direction the direction to set
+     */
+    public void setDirection(String direction) {
+        this.direction = direction;
     }
     
 }

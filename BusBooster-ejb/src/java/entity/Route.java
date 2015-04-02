@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,6 +26,16 @@ public class Route implements Serializable {
     private Long startBusStopId;
     private Long endBusStopId;
     private Double distance;
+    private Double travelTime;
+    private Timestamp travelTimeUpdateTime;
+    
+    public Route() {}
+    
+    public Route(Long start, Long end, Double distance) {
+        this.setStartBusStopId(start);
+        this.setEndBusStopId(end);
+        this.setDistance(distance);
+    }
 
     public Long getId() {
         return id;
@@ -99,6 +110,34 @@ public class Route implements Serializable {
      */
     public void setDistance(Double distance) {
         this.distance = distance;
+    }
+
+    /**
+     * @return the travelTime
+     */
+    public Double getTravelTime() {
+        return travelTime;
+    }
+
+    /**
+     * @param travelTime the travelTime to set
+     */
+    public void setTravelTime(Double travelTime) {
+        this.travelTime = travelTime;
+    }
+
+    /**
+     * @return the travelTimeUpdateTime
+     */
+    public Timestamp getTravelTimeUpdateTime() {
+        return travelTimeUpdateTime;
+    }
+
+    /**
+     * @param travelTimeUpdateTime the travelTimeUpdateTime to set
+     */
+    public void setTravelTimeUpdateTime(Timestamp travelTimeUpdateTime) {
+        this.travelTimeUpdateTime = travelTimeUpdateTime;
     }
     
 }

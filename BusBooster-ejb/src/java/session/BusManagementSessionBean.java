@@ -25,9 +25,9 @@ public class BusManagementSessionBean implements BusManagementSessionBeanLocal {
     private EntityManager em;
     
     @Override
-    public Bus register(String busNo, String plateNo, Double longtitude, Double latitude, Timestamp lastUpdateTime, Long previousStopId) {
+    public Bus register(String busNo, String direction, Double longitude, Double latitude, Timestamp lastUpdateTime, Long previousStopId) {
         try {
-            Bus bus = new Bus(busNo, plateNo, longtitude, latitude, lastUpdateTime, previousStopId);
+            Bus bus = new Bus(busNo, direction, longitude, latitude, lastUpdateTime, previousStopId);
             Query q = em.createQuery("SELECT b FROM BusStopDistance b WHERE b.startBusStopId=:start AND b.endBusStopId=:end");
             q.setParameter("start", previousStopId);
             q.setParameter("end", previousStopId+1);
@@ -42,8 +42,9 @@ public class BusManagementSessionBean implements BusManagementSessionBeanLocal {
         
     }
     
+    // method no use currently
     @Override
-    public Boolean update(Long busId, String busNo, String plateNo, Double longtitude, Double latitude, Double speed, Timestamp lastUpdateTime) {
+    public Boolean update(Long busId, String busNo, String direction, Double longitude, Double latitude, Double speed, Timestamp lastUpdateTime) {
         //calculate arrival time here, record arrival and delay
         
         Query query = em.createQuery("SELECT b FROM Bus b WHERE b.id=:busId");
@@ -60,14 +61,9 @@ public class BusManagementSessionBean implements BusManagementSessionBeanLocal {
             return false;
         }
         
-        if(plateNo != null && !bus.getPlateNo().equals(plateNo)) {
-            System.out.println("PlateNo does not exist");
-            return false;
-        }
-        
-        if(longtitude != bus.getLatitude()) {
-            bus.setLongtitude(longtitude);
-            System.out.println("longtitude updated!");
+        if(longitude != bus.getLatitude()) {
+            bus.setLongitude(longitude);
+            System.out.println("longitude updated!");
         }
         
         if(latitude != bus.getLatitude()) {
