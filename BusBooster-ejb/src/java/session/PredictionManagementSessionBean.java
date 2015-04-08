@@ -29,7 +29,7 @@ public class PredictionManagementSessionBean implements PredictionManagementSess
     private EntityManager em;
     
     @Override
-    public void updateArrivalTime(List<BusData> busDataList) {
+    public void updateBusInfo(List<BusData> busDataList) {
         // extract all new bus data received from user
         // the data passed in is the user from the same bus
         // analyze the bus data and upadate the corresponding bus data and arrival time and bus delay
@@ -46,14 +46,16 @@ public class PredictionManagementSessionBean implements PredictionManagementSess
         Date date = new Date();
         Timestamp now = new Timestamp(date.getTime());
         
+        // get the bus
         Query q = em.createQuery("SELECT b FROM Bus b WHERE b.id=:id");
         q.setParameter("id", busDataList.get(0).getBusId()); // 100% can find bus
         List<Bus> busList = new ArrayList(q.getResultList());
         Bus bus = busList.get(0);
         
-        Double temp0 = 0.0;
-        Double temp1 = 0.0;
-        Double temp2 = 0.0;
+        // calculate the average speed and location to increase accuracy
+        Double temp0 = 0.0; //speed
+        Double temp1 = 0.0; //latitude
+        Double temp2 = 0.0; //longitude
         
         for (BusData b : busDataList) {
             temp0 += b.getSpeed();
@@ -64,6 +66,7 @@ public class PredictionManagementSessionBean implements PredictionManagementSess
         Double avgLat = temp1 / busDataList.size();
         Double avgLon = temp2 / busDataList.size();
         
+        
         Double speed = bus.getSpeed();
 
         // time interval is 10 seconds, get the distance travelled during such period
@@ -72,9 +75,9 @@ public class PredictionManagementSessionBean implements PredictionManagementSess
 
         //find the bus with the same bus no arrived at next bus stop within 5 min then plus the delay of it
         Double delay = 0.0;
-        Query query = em.createQuery("SELECT b FROM Bus b WHERE b.busNo=:no AND b.previousStopId=:stopId");
+        Query query = em.createQuery("SELECT b FROM Bus b WHERE b.busNo=:no AND b.nextStop=:stop");
         query.setParameter("no", bus.getBusNo());
-        query.setParameter("stopId", bus.getNextStopId());
+        query.setParameter("stop", bus.getNextStop());
         List<Bus> preBusList = new ArrayList(query.getResultList());
         if (preBusList.isEmpty()) {
             delay = 0.0;
@@ -88,28 +91,28 @@ public class PredictionManagementSessionBean implements PredictionManagementSess
         bus.setDistanceToNextStop(bus.getDistanceToNextStop() - distanceTraveled);
         bus.setDistanceFromPreviousStop(distanceTraveled);
         bus.setSpeed(currentSpeed);
-        bus.setArrivalTime(arrivalTime);
+//        bus.setArrivalTime(arrivalTime);
         bus.setLatitude(avgLat);
         bus.setLongitude(avgLon);
         bus.setLastUpdateTime(now);
 
-        // update bus delay
-        if (currentScheduledArrivingTime.after(bus.getScheduledArrivingTime())) {
-            bus.setDelay((double) currentScheduledArrivingTime.getTime() - bus.getScheduledArrivingTime().getTime());
-            bus.setScheduledArrivingTime(currentScheduledArrivingTime);
-        } else {
-            bus.setDelay(0.0);
-            bus.setScheduledArrivingTime(currentScheduledArrivingTime);
-        }
+//        // update bus delay
+//        if (currentScheduledArrivingTime.after(bus.getScheduledArrivingTime())) {
+//            bus.setDelay((double) currentScheduledArrivingTime.getTime() - bus.getScheduledArrivingTime().getTime());
+//            bus.setScheduledArrivingTime(currentScheduledArrivingTime);
+//        } else {
+//            bus.setDelay(0.0);
+//            bus.setScheduledArrivingTime(currentScheduledArrivingTime);
+//        }
 
         // if bus approach bus stops
-        BusStop nextStop = em.find(BusStop.class, bus.getNextStopId());
+        BusStop nextStop = bus.getNextStop();
         if (this.calculateDistance(avgLat, avgLon, nextStop.getLatitude(), nextStop.getLongitude()) < 10
                 || bus.getDistanceToNextStop() < 0) {
             double travelTimeBetweenStops = (double) (now.getTime() - bus.getTimeLeftLastStop().getTime()) / 1000; // get the travel time in between stops by seconds
-            Query q1 = em.createQuery("SELECT b FROM Route b WHERE b.startBusStopId=:start AND b.endBusStopId=:end");
-            q1.setParameter("start", bus.getPreviousStopId());
-            q1.setParameter("end", bus.getNextStopId());
+            Query q1 = em.createQuery("SELECT b FROM Route b WHERE b.startStop=:start AND b.endStop=:end");
+            q1.setParameter("start", bus.getPreviousStop());
+            q1.setParameter("end", bus.getNextStop());
             Route bsd = (Route) q1.getSingleResult();
             if(bsd.getTravelTimeUpdateTime().before(now)) {
                 bsd.setTravelTime(travelTimeBetweenStops);
@@ -117,10 +120,8 @@ public class PredictionManagementSessionBean implements PredictionManagementSess
             
             bus.setDistanceFromPreviousStop(0.0);
             bus.setDistanceToNextStop(nextStop.getDistanceToNextStop());
-            bus.setPreviousStopId(nextStop.getId());
-            bus.setPreviousStopName(nextStop.getBusStopName());
-            bus.setNextStopId(nextStop.getNextStopId());
-            bus.setNextStopName(nextStop.getNextStopName());
+            bus.setPreviousStop(nextStop);
+            //bus.setNextStop(nextStop.getNextStop()); // should get from the bus route instead
             
         }
     }
@@ -144,9 +145,9 @@ public class PredictionManagementSessionBean implements PredictionManagementSess
             // arrival time plus the delay of the previous bus's arrival time
             Bus temp = findPreviousBus(b, busStop.getBusStopName());
             if (temp != null) {
-                arrivalTime.add(b.getArrivalTime() + temp.getDelay()); // delay algorithm to be upgraded in the future
+//                arrivalTime.add(b.getArrivalTime() + temp.getDelay()); // delay algorithm to be upgraded in the future
             } else {
-                arrivalTime.add(b.getArrivalTime());
+//                arrivalTime.add(b.getArrivalTime());
             }
         }
         
@@ -157,6 +158,11 @@ public class PredictionManagementSessionBean implements PredictionManagementSess
     public List<BusStop> getNearbyBusStop(Double lat, Double lon) {
         // sort the nearby bus stop within 1 km and return a list
         return null;
+    }
+    
+    @Override
+    public Double getArrivalTime(String busStopNumber, String busNo) {
+        return 0.0;
     }
 
     // currently unused

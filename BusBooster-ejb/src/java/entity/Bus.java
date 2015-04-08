@@ -7,10 +7,13 @@ package entity;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -29,32 +32,35 @@ public class Bus implements Serializable {
     private Double longitude;
     private Double latitude;
     private Double speed;
-    private Timestamp lastUpdateTime;
-    private Long previousStopId;
-    private String previousStopName;
-    private Long nextStopId;
-    private String nextStopName;
+    private Timestamp lastUpdateTime; //update time of bus info, eg, location speed
     private Timestamp timeLeftLastStop;
     private Double distanceFromPreviousStop;
     private Double distanceToNextStop;
     
-    private Double arrivalTime; // to next stop
-    private Timestamp scheduledArrivingTime;
-    private Double delay;
+    private BusStop previousStop;
+    private BusStop nextStop;
+    
+    private Double delay; // from previous stop, only for 1st model
     
     private Double previousRouteTravelTime;
     
+    @OneToMany
+    private List<User> userList;
+    
+    private Integer numberOfUserOnboard;
+    
     public Bus(){}
     
-    public Bus(String busNo, String direction, Double longitude, Double latitude, Timestamp lastUpdateTime, Long previousStopId){
+    public Bus(String busNo, String direction, Double longitude, Double latitude, BusStop previousStop, BusStop nextStop){
         this.setBusNo(busNo);
         this.setDirection(direction);
         this.setLongitude(longitude);
         this.setLatitude(latitude);
-        this.setLastUpdateTime(lastUpdateTime);
+        Date now = new Date();
+        this.setLastUpdateTime(new Timestamp(now.getTime()));
         this.setTimeLeftLastStop(lastUpdateTime);
-        this.setPreviousStopId(previousStopId);
-        this.setNextStopId(previousStopId+1);
+        this.setPreviousStop(previousStop);
+        this.setNextStop(nextStop);
         this.setSpeed(0.0);
         this.setDistanceFromPreviousStop(0.0);
     }
@@ -149,34 +155,6 @@ public class Bus implements Serializable {
     }
 
     /**
-     * @return the previousStopId
-     */
-    public Long getPreviousStopId() {
-        return previousStopId;
-    }
-
-    /**
-     * @param previousStopId the previousStopId to set
-     */
-    public void setPreviousStopId(Long previousStopId) {
-        this.previousStopId = previousStopId;
-    }
-
-    /**
-     * @return the nextStopId
-     */
-    public Long getNextStopId() {
-        return nextStopId;
-    }
-
-    /**
-     * @param nextStopId the nextStopId to set
-     */
-    public void setNextStopId(Long nextStopId) {
-        this.nextStopId = nextStopId;
-    }
-
-    /**
      * @return the timeLeftLastStop
      */
     public Timestamp getTimeLeftLastStop() {
@@ -233,48 +211,6 @@ public class Bus implements Serializable {
     }
 
     /**
-     * @return the previousStopName
-     */
-    public String getPreviousStopName() {
-        return previousStopName;
-    }
-
-    /**
-     * @param previousStopName the previousStopName to set
-     */
-    public void setPreviousStopName(String previousStopName) {
-        this.previousStopName = previousStopName;
-    }
-
-    /**
-     * @return the nextStopName
-     */
-    public String getNextStopName() {
-        return nextStopName;
-    }
-
-    /**
-     * @param nextStopName the nextStopName to set
-     */
-    public void setNextStopName(String nextStopName) {
-        this.nextStopName = nextStopName;
-    }
-
-    /**
-     * @return the arrivalTime
-     */
-    public Double getArrivalTime() {
-        return arrivalTime;
-    }
-
-    /**
-     * @param arrivalTime the arrivalTime to set
-     */
-    public void setArrivalTime(Double arrivalTime) {
-        this.arrivalTime = arrivalTime;
-    }
-
-    /**
      * @return the longitude
      */
     public Double getLongitude() {
@@ -317,20 +253,6 @@ public class Bus implements Serializable {
     }
 
     /**
-     * @return the scheduledArrivingTime
-     */
-    public Timestamp getScheduledArrivingTime() {
-        return scheduledArrivingTime;
-    }
-
-    /**
-     * @param scheduledArrivingTime the scheduledArrivingTime to set
-     */
-    public void setScheduledArrivingTime(Timestamp scheduledArrivingTime) {
-        this.scheduledArrivingTime = scheduledArrivingTime;
-    }
-
-    /**
      * @return the direction
      */
     public String getDirection() {
@@ -342,6 +264,62 @@ public class Bus implements Serializable {
      */
     public void setDirection(String direction) {
         this.direction = direction;
+    }
+
+    /**
+     * @return the previousStop
+     */
+    public BusStop getPreviousStop() {
+        return previousStop;
+    }
+
+    /**
+     * @param previousStop the previousStop to set
+     */
+    public void setPreviousStop(BusStop previousStop) {
+        this.previousStop = previousStop;
+    }
+
+    /**
+     * @return the nextStop
+     */
+    public BusStop getNextStop() {
+        return nextStop;
+    }
+
+    /**
+     * @param nextStop the nextStop to set
+     */
+    public void setNextStop(BusStop nextStop) {
+        this.nextStop = nextStop;
+    }
+
+    /**
+     * @return the userList
+     */
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    /**
+     * @param userList the userList to set
+     */
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
+
+    /**
+     * @return the numberOfUserOnboard
+     */
+    public Integer getNumberOfUserOnboard() {
+        return numberOfUserOnboard;
+    }
+
+    /**
+     * @param numberOfUserOnboard the numberOfUserOnboard to set
+     */
+    public void setNumberOfUserOnboard(Integer numberOfUserOnboard) {
+        this.numberOfUserOnboard = numberOfUserOnboard;
     }
     
 }

@@ -6,10 +6,12 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -26,15 +28,27 @@ public class BusStop implements Serializable {
     private String busStopNo;
     private Double longitude;
     private Double latitude;
-    private Long nextStopId;
-    private String nextStopName;
-    private Long previousStopId;
-    private Double distanceToNextStop;
-    private Double distanceToPreviousStop;
+    private Double distanceToNextStop; // in meter
+    private Double distanceToPreviousStop; // in meter
+    private Integer sequence; // bus sequence arrived at this stop;
+    
+    private List<Long> incomingRouteIdList;
+    private List<Long> outgoingRouteIdList;
     
     private Boolean terminal;
     
     public BusStop(){}
+    
+    //only for populate bean
+    public BusStop(String name, String stopNo, Double latitude, Double longitude, Double distanceToN, Double distanceToP, Boolean terminal) {
+        this.setBusStopName(name);
+        this.setBusStopNo(stopNo);
+        this.setLatitude(latitude);
+        this.setLongitude(longitude);
+        this.setDistanceToNextStop(distanceToN);
+        this.setDistanceToPreviousStop(distanceToP);
+        this.setTerminal(terminal);
+    }
 
     public Long getId() {
         return id;
@@ -126,34 +140,6 @@ public class BusStop implements Serializable {
     }
 
     /**
-     * @return the nextStopId
-     */
-    public Long getNextStopId() {
-        return nextStopId;
-    }
-
-    /**
-     * @param nextStopId the nextStopId to set
-     */
-    public void setNextStopId(Long nextStopId) {
-        this.nextStopId = nextStopId;
-    }
-
-    /**
-     * @return the previousStopId
-     */
-    public Long getPreviousStopId() {
-        return previousStopId;
-    }
-
-    /**
-     * @param previousStopId the previousStopId to set
-     */
-    public void setPreviousStopId(Long previousStopId) {
-        this.previousStopId = previousStopId;
-    }
-
-    /**
      * @return the distanceToNextStop
      */
     public Double getDistanceToNextStop() {
@@ -196,17 +182,45 @@ public class BusStop implements Serializable {
     }
 
     /**
-     * @return the nextStopName
+     * @return the sequence
      */
-    public String getNextStopName() {
-        return nextStopName;
+    public Integer getSequence() {
+        return sequence;
     }
 
     /**
-     * @param nextStopName the nextStopName to set
+     * @param sequence the sequence to set
      */
-    public void setNextStopName(String nextStopName) {
-        this.nextStopName = nextStopName;
+    public void setSequence(Integer sequence) {
+        this.sequence = sequence;
+    }
+
+    /**
+     * @return the incomingRouteIdList
+     */
+    public List<Long> getIncomingRouteIdList() {
+        return incomingRouteIdList;
+    }
+
+    /**
+     * @param incomingRouteIdList the incomingRouteIdList to set
+     */
+    public void setIncomingRouteIdList(List<Long> incomingRouteIdList) {
+        this.incomingRouteIdList = incomingRouteIdList;
+    }
+
+    /**
+     * @return the outgoingRouteIdList
+     */
+    public List<Long> getOutgoingRouteIdList() {
+        return outgoingRouteIdList;
+    }
+
+    /**
+     * @param outgoingRouteIdList the outgoingRouteIdList to set
+     */
+    public void setOutgoingRouteIdList(List<Long> outgoingRouteIdList) {
+        this.outgoingRouteIdList = outgoingRouteIdList;
     }
     
 }

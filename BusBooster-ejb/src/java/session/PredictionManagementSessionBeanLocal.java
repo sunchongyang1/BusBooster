@@ -16,7 +16,9 @@ import javax.ejb.Local;
  */
 @Local
 public interface PredictionManagementSessionBeanLocal {
-    public void updateArrivalTime(List<BusData> busDataList);
+    public void updateBusInfo(List<BusData> busDataList);
     public List<Double> getArrivalTime(String busNo, BusStop busStop);
     public List<BusStop> getNearbyBusStop(Double lat, Double lon);
+    
+    public Double getArrivalTime(String busStopNumber, String busNo);
 }

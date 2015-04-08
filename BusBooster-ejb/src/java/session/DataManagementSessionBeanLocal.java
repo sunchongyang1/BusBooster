@@ -5,7 +5,9 @@
  */
 package session;
 
+import entity.Bus;
 import entity.BusData;
+import entity.User;
 import java.sql.Timestamp;
 import java.util.List;
 import javax.ejb.Local;
@@ -16,7 +18,10 @@ import javax.ejb.Local;
  */
 @Local
 public interface DataManagementSessionBeanLocal {
-    public BusData updateRecord(Long busId, String busNo, String direction, Double Longitude, Double Latitude, Double speed);
-    
+    public User getBusNumberAndDirection(String busNo, String direction, String busStopNumber); // no existing bus - create. bus exists - attach user to bus. create new user currently.
+    public BusData updateRecord(Long userId, Double Longitude, Double Latitude, Double speed);
     public Boolean archiveData(List<BusData> busDataList);
+    
+    //for test
+    public int getCustomerCount();
 }

@@ -6,6 +6,7 @@
 package services;
 
 import entity.Bus;
+import entity.BusStop;
 import java.sql.Timestamp;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -40,7 +41,7 @@ public class BusDataSources {
     @Produces("application/json")
     public Bus getJson() {
         //TODO return proper representation object
-        return new Bus("Bus 1", "AAAA", new Double(0), new Double(0), new Timestamp(2015, 10, 1, 1, 1, 1, 0), 0l);
+        return new Bus("Bus 1", "AAAA", new Double(0), new Double(0), new BusStop(), new BusStop());
 //        throw new UnsupportedOperationException();
     }
 

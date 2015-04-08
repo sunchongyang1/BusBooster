@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -29,8 +31,16 @@ public class User implements Serializable {
     private Long currentOnBusId;
     private Long currentAtStopId;
     private Boolean onBoard;
+    @ManyToOne
+    private Bus bus;
+    
+    private String sessionId;
     
     public User(){}
+    
+    public User(String username) {
+        this.setUsername(username);
+    }
     
     public User(String username, String email, String password) {
         this.setUsername(username);
@@ -169,6 +179,34 @@ public class User implements Serializable {
      */
     public void setOnBoard(Boolean onBoard) {
         this.onBoard = onBoard;
+    }
+
+    /**
+     * @return the sessionId
+     */
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    /**
+     * @param sessionId the sessionId to set
+     */
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    /**
+     * @return the bus
+     */
+    public Bus getBus() {
+        return bus;
+    }
+
+    /**
+     * @param bus the bus to set
+     */
+    public void setBus(Bus bus) {
+        this.bus = bus;
     }
     
 }

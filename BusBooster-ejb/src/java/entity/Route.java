@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -23,17 +24,21 @@ public class Route implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    private Long startBusStopId;
-    private Long endBusStopId;
+    @OneToOne
+    private BusStop startStop;
+    @OneToOne
+    private BusStop endStop;
     private Double distance;
+    
     private Double travelTime;
     private Timestamp travelTimeUpdateTime;
     
     public Route() {}
     
-    public Route(Long start, Long end, Double distance) {
-        this.setStartBusStopId(start);
-        this.setEndBusStopId(end);
+    // only for pupolate bean
+    public Route(BusStop start, BusStop end, Double distance) {
+        this.setStartStop(start);
+        this.setEndStop(end);
         this.setDistance(distance);
     }
 
@@ -68,34 +73,6 @@ public class Route implements Serializable {
     @Override
     public String toString() {
         return "entity.Route[ id=" + id + " ]";
-    }
-
-    /**
-     * @return the startBusStopId
-     */
-    public Long getStartBusStopId() {
-        return startBusStopId;
-    }
-
-    /**
-     * @param startBusStopId the startBusStopId to set
-     */
-    public void setStartBusStopId(Long startBusStopId) {
-        this.startBusStopId = startBusStopId;
-    }
-
-    /**
-     * @return the endBusStopId
-     */
-    public Long getEndBusStopId() {
-        return endBusStopId;
-    }
-
-    /**
-     * @param endBusStopId the endBusStopId to set
-     */
-    public void setEndBusStopId(Long endBusStopId) {
-        this.endBusStopId = endBusStopId;
     }
 
     /**
@@ -138,6 +115,34 @@ public class Route implements Serializable {
      */
     public void setTravelTimeUpdateTime(Timestamp travelTimeUpdateTime) {
         this.travelTimeUpdateTime = travelTimeUpdateTime;
+    }
+
+    /**
+     * @return the startStop
+     */
+    public BusStop getStartStop() {
+        return startStop;
+    }
+
+    /**
+     * @param startStop the startStop to set
+     */
+    public void setStartStop(BusStop startStop) {
+        this.startStop = startStop;
+    }
+
+    /**
+     * @return the endStop
+     */
+    public BusStop getEndStop() {
+        return endStop;
+    }
+
+    /**
+     * @param endStop the endStop to set
+     */
+    public void setEndStop(BusStop endStop) {
+        this.endStop = endStop;
     }
     
 }

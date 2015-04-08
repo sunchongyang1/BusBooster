@@ -38,17 +38,6 @@ public class BusData implements Serializable {
     
     public BusData(){}
     
-    public BusData(String busNo, String direction, Double longitude, Double latitude, Double speed, Timestamp time){
-        this.setBusNo(busNo);
-        this.setDirection(direction);
-        this.setLongitude(longitude);
-        this.setLatitude(latitude);
-        this.setSpeed(speed);
-        this.setTime(time);
-        this.setNewBus(Boolean.TRUE);
-        this.setArchived(Boolean.FALSE);
-    }
-    
     public BusData(Long busId, String busNo, String direction, Double longitude, Double latitude, Double speed, Timestamp time){
         this.setBusId(busId);
         this.setBusNo(busNo);
@@ -57,7 +46,7 @@ public class BusData implements Serializable {
         this.setLatitude(latitude);
         this.setSpeed(speed);
         this.setTime(time);
-        this.setNewBus(Boolean.FALSE);
+//        this.setNewBus(Boolean.FALSE);
         this.setArchived(Boolean.FALSE);
     }
 

@@ -6,6 +6,8 @@
 package session;
 
 import entity.Bus;
+import entity.BusRoute;
+import entity.BusStop;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +27,21 @@ public class BusManagementSessionBean implements BusManagementSessionBeanLocal {
     private EntityManager em;
     
     @Override
-    public Bus register(String busNo, String direction, Double longitude, Double latitude, Timestamp lastUpdateTime, Long previousStopId) {
+    public Bus register(String busNo, String direction, Double longitude, Double latitude, Timestamp lastUpdateTime, BusStop previousBusStop) {
+        Query query = em.createQuery("SELECT b FROM BusRoute b WHERE b.busNo=:no AND b.direction=:dir");
+        query.setParameter("no", busNo);
+        query.setParameter("dir", direction);
+        BusRoute busRoute = (BusRoute) query.getSingleResult();
+        int i = busRoute.getBusStopList().indexOf(previousBusStop);
+        BusStop nextBusStop = busRoute.getBusStopList().get(i);
         try {
-            Bus bus = new Bus(busNo, direction, longitude, latitude, lastUpdateTime, previousStopId);
-            Query q = em.createQuery("SELECT b FROM BusStopDistance b WHERE b.startBusStopId=:start AND b.endBusStopId=:end");
-            q.setParameter("start", previousStopId);
-            q.setParameter("end", previousStopId+1);
+            Bus bus = new Bus(busNo, direction, longitude, latitude, previousBusStop, nextBusStop);
+            Query q = em.createQuery("SELECT r FROM Route r WHERE r.startStop=:start AND r.endStop=:end");
+            q.setParameter("start", previousBusStop);
+            q.setParameter("end", nextBusStop);
+            
             bus.setDistanceToNextStop((Double)q.getSingleResult());
+            bus.setDistanceFromPreviousStop(0.0);
             bus.setDelay(0.0);
             em.persist(bus);
             return bus;

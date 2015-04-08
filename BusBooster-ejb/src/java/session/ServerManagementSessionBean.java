@@ -87,7 +87,7 @@ public class ServerManagementSessionBean implements ServerManagementSessionBeanL
                         } // 0 tolerant for no bus no, future development to accommodate user who does not enter bus no.
                     }
 
-                    pmsbl.updateArrivalTime(temp);
+                    pmsbl.updateBusInfo(temp);
                     dmsbl.archiveData(temp);
                 }
             }
