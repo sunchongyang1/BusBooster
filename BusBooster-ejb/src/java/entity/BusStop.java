@@ -30,10 +30,19 @@ public class BusStop implements Serializable {
     private Double latitude;
     private Double distanceToNextStop; // in meter
     private Double distanceToPreviousStop; // in meter
-    private Integer sequence; // bus sequence arrived at this stop;
+    private Integer arrivalSequence; // bus sequence arrived at this stop;
+    private Integer departureSequence;
+    // currently sequence system could only handle one bus route. if the stop has two or more bus route. sequence number system
+    // needs also to be upgraded
     
     private List<Long> incomingRouteIdList;
     private List<Long> outgoingRouteIdList;
+    
+    // need to be upgraded, currently accommodate only one bus route
+    @OneToMany
+    private List<ArrivalTime> arrivalTimeList;
+    @OneToMany
+    private List<DepartureTime> departureTimeList;
     
     private Boolean terminal;
     
@@ -48,6 +57,8 @@ public class BusStop implements Serializable {
         this.setDistanceToNextStop(distanceToN);
         this.setDistanceToPreviousStop(distanceToP);
         this.setTerminal(terminal);
+        this.setArrivalSequence(0);
+        this.setDepartureSequence(0);
     }
 
     public Long getId() {
@@ -182,20 +193,6 @@ public class BusStop implements Serializable {
     }
 
     /**
-     * @return the sequence
-     */
-    public Integer getSequence() {
-        return sequence;
-    }
-
-    /**
-     * @param sequence the sequence to set
-     */
-    public void setSequence(Integer sequence) {
-        this.sequence = sequence;
-    }
-
-    /**
      * @return the incomingRouteIdList
      */
     public List<Long> getIncomingRouteIdList() {
@@ -221,6 +218,62 @@ public class BusStop implements Serializable {
      */
     public void setOutgoingRouteIdList(List<Long> outgoingRouteIdList) {
         this.outgoingRouteIdList = outgoingRouteIdList;
+    }
+
+    /**
+     * @return the arrivalTimeList
+     */
+    public List<ArrivalTime> getArrivalTimeList() {
+        return arrivalTimeList;
+    }
+
+    /**
+     * @param arrivalTimeList the arrivalTimeList to set
+     */
+    public void setArrivalTimeList(List<ArrivalTime> arrivalTimeList) {
+        this.arrivalTimeList = arrivalTimeList;
+    }
+
+    /**
+     * @return the departureTimeList
+     */
+    public List<DepartureTime> getDepartureTimeList() {
+        return departureTimeList;
+    }
+
+    /**
+     * @param departureTimeList the departureTimeList to set
+     */
+    public void setDepartureTimeList(List<DepartureTime> departureTimeList) {
+        this.departureTimeList = departureTimeList;
+    }
+
+    /**
+     * @return the arrivalSequence
+     */
+    public Integer getArrivalSequence() {
+        return arrivalSequence;
+    }
+
+    /**
+     * @param arrivalSequence the arrivalSequence to set
+     */
+    public void setArrivalSequence(Integer arrivalSequence) {
+        this.arrivalSequence = arrivalSequence;
+    }
+
+    /**
+     * @return the departureSequence
+     */
+    public Integer getDepartureSequence() {
+        return departureSequence;
+    }
+
+    /**
+     * @param departureSequence the departureSequence to set
+     */
+    public void setDepartureSequence(Integer departureSequence) {
+        this.departureSequence = departureSequence;
     }
     
 }

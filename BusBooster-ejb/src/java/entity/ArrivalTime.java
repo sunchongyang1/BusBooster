@@ -11,7 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 /**
  *
@@ -24,11 +24,12 @@ public class ArrivalTime implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @OneToOne
+    @ManyToOne
     private BusStop busStop;
     private Long busId;
     private Integer sequence;
     private Timestamp arrivalTime;
+    private String busNo;
     
     public ArrivalTime() {}
     
@@ -36,6 +37,12 @@ public class ArrivalTime implements Serializable {
         this.setBusStop(busStop);
         this.setBusId(busId);
         this.setSequence(sequence);
+        this.setArrivalTime(arrivalTime);
+    }
+    
+    public ArrivalTime(BusStop busStop, Long busId, Timestamp arrivalTime) {
+        this.setBusStop(busStop);
+        this.setBusId(busId);
         this.setArrivalTime(arrivalTime);
     }
 
@@ -126,6 +133,20 @@ public class ArrivalTime implements Serializable {
      */
     public void setArrivalTime(Timestamp arrivalTime) {
         this.arrivalTime = arrivalTime;
+    }
+
+    /**
+     * @return the busNo
+     */
+    public String getBusNo() {
+        return busNo;
+    }
+
+    /**
+     * @param busNo the busNo to set
+     */
+    public void setBusNo(String busNo) {
+        this.busNo = busNo;
     }
     
 }

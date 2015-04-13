@@ -6,6 +6,7 @@
 package session;
 
 import entity.BusData;
+import entity.BusRoute;
 import entity.BusStop;
 import java.util.List;
 import javax.ejb.Local;
@@ -17,8 +18,11 @@ import javax.ejb.Local;
 @Local
 public interface PredictionManagementSessionBeanLocal {
     public void updateBusInfo(List<BusData> busDataList);
-    public List<Double> getArrivalTime(String busNo, BusStop busStop);
+    
+//    public List<Double> getArrivalTime(String busNo, BusStop busStop);
     public List<BusStop> getNearbyBusStop(Double lat, Double lon);
+    public List<BusRoute> getBusRouteByBusStop(String busStopNumber);
     
     public Double getArrivalTime(String busStopNumber, String busNo);
+    public Double getArrivalTimeBasic(String busStopNumber, String busNo);
 }

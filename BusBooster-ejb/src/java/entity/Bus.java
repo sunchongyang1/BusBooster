@@ -40,6 +40,7 @@ public class Bus implements Serializable {
     private BusStop previousStop;
     private BusStop nextStop;
     
+    private Timestamp expectedArrivalTime;
     private Double delay; // from previous stop, only for 1st model
     
     private Double previousRouteTravelTime;
@@ -320,6 +321,20 @@ public class Bus implements Serializable {
      */
     public void setNumberOfUserOnboard(Integer numberOfUserOnboard) {
         this.numberOfUserOnboard = numberOfUserOnboard;
+    }
+
+    /**
+     * @return the expectedArrivalTime
+     */
+    public Timestamp getExpectedArrivalTime() {
+        return expectedArrivalTime;
+    }
+
+    /**
+     * @param expectedArrivalTime the expectedArrivalTime to set
+     */
+    public void setExpectedArrivalTime(Timestamp expectedArrivalTime) {
+        this.expectedArrivalTime = expectedArrivalTime;
     }
     
 }
