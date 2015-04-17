@@ -6,26 +6,23 @@
 package entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 
 /**
  *
  * @author chongyangsun
  */
 @Entity
-public class BusStop implements Serializable {
+public class BusStopSimple implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
+    private Long busStopId;
     private String busStopName;
     private String busStopNo;
     private Double longitude;
@@ -34,27 +31,15 @@ public class BusStop implements Serializable {
     private Double distanceToPreviousStop; // in meter
     private Integer arrivalSequence; // bus sequence arrived at this stop;
     private Integer departureSequence;
-    // currently sequence system could only handle one bus route. if the stop has two or more bus route. sequence number system
-    // needs also to be upgraded
-    
-    private List<Long> incomingRouteIdList = new ArrayList();
-    private List<Long> outgoingRouteIdList = new ArrayList();
-    
-    // need to be upgraded, currently accommodate only one bus route
-    @OneToMany
-    private List<ArrivalTime> arrivalTimeList = new ArrayList();
-    @OneToMany
-    private List<DepartureTime> departureTimeList = new ArrayList();
-    
-    @ManyToMany(mappedBy="busStopList")
-    private List<BusRoute> busRouteList = new ArrayList();
-    
+
     private Boolean terminal;
     
-    public BusStop(){}
+    public BusStopSimple(){}
     
     //only for populate bean
-    public BusStop(String name, String stopNo, Double latitude, Double longitude, Double distanceToN, Double distanceToP, Boolean terminal) {
+    public BusStopSimple(Long busStopId, String name, String stopNo, Double latitude, Double longitude, 
+            Double distanceToN, Double distanceToP, Integer arrivalSequence, Integer departureSequence, Boolean terminal) {
+        this.setBusStopId(busStopId);
         this.setBusStopName(name);
         this.setBusStopNo(stopNo);
         this.setLatitude(latitude);
@@ -62,8 +47,8 @@ public class BusStop implements Serializable {
         this.setDistanceToNextStop(distanceToN);
         this.setDistanceToPreviousStop(distanceToP);
         this.setTerminal(terminal);
-        this.setArrivalSequence(0);
-        this.setDepartureSequence(0);
+        this.setArrivalSequence(arrivalSequence);
+        this.setDepartureSequence(departureSequence);
     }
 
     public Long getId() {
@@ -84,10 +69,10 @@ public class BusStop implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof BusStop)) {
+        if (!(object instanceof BusStopSimple)) {
             return false;
         }
-        BusStop other = (BusStop) object;
+        BusStopSimple other = (BusStopSimple) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -198,62 +183,6 @@ public class BusStop implements Serializable {
     }
 
     /**
-     * @return the incomingRouteIdList
-     */
-    public List<Long> getIncomingRouteIdList() {
-        return incomingRouteIdList;
-    }
-
-    /**
-     * @param incomingRouteIdList the incomingRouteIdList to set
-     */
-    public void setIncomingRouteIdList(List<Long> incomingRouteIdList) {
-        this.incomingRouteIdList = incomingRouteIdList;
-    }
-
-    /**
-     * @return the outgoingRouteIdList
-     */
-    public List<Long> getOutgoingRouteIdList() {
-        return outgoingRouteIdList;
-    }
-
-    /**
-     * @param outgoingRouteIdList the outgoingRouteIdList to set
-     */
-    public void setOutgoingRouteIdList(List<Long> outgoingRouteIdList) {
-        this.outgoingRouteIdList = outgoingRouteIdList;
-    }
-
-    /**
-     * @return the arrivalTimeList
-     */
-    public List<ArrivalTime> getArrivalTimeList() {
-        return arrivalTimeList;
-    }
-
-    /**
-     * @param arrivalTimeList the arrivalTimeList to set
-     */
-    public void setArrivalTimeList(List<ArrivalTime> arrivalTimeList) {
-        this.arrivalTimeList = arrivalTimeList;
-    }
-
-    /**
-     * @return the departureTimeList
-     */
-    public List<DepartureTime> getDepartureTimeList() {
-        return departureTimeList;
-    }
-
-    /**
-     * @param departureTimeList the departureTimeList to set
-     */
-    public void setDepartureTimeList(List<DepartureTime> departureTimeList) {
-        this.departureTimeList = departureTimeList;
-    }
-
-    /**
      * @return the arrivalSequence
      */
     public Integer getArrivalSequence() {
@@ -282,17 +211,17 @@ public class BusStop implements Serializable {
     }
 
     /**
-     * @return the busRouteList
+     * @return the busStopId
      */
-    public List<BusRoute> getBusRouteList() {
-        return busRouteList;
+    public Long getBusStopId() {
+        return busStopId;
     }
 
     /**
-     * @param busRouteList the busRouteList to set
+     * @param busStopId the busStopId to set
      */
-    public void setBusRouteList(List<BusRoute> busRouteList) {
-        this.busRouteList = busRouteList;
+    public void setBusStopId(Long busStopId) {
+        this.busStopId = busStopId;
     }
-    
+
 }

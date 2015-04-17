@@ -6,12 +6,13 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 
 /**
  *
@@ -26,8 +27,16 @@ public class BusRoute implements Serializable {
     
     private String busNo;
     private String direction;//different direction, same bus number will have separate entry in database
-    @OneToMany
+    @ManyToMany
     private List<BusStop> busStopList;
+    
+    public BusRoute() {}
+    
+    public BusRoute(String busNo, String direction) {
+        this.setBusNo(busNo);
+        this.setDirection(direction);
+        this.setBusStopList(new ArrayList());
+    }
 
     public Long getId() {
         return id;

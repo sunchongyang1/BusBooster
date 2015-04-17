@@ -1,57 +1,54 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1">
-		<title>BusBooster</title>
-		<link rel="stylesheet" href="themes/Bootstrap.css">
-		<link rel="stylesheet" href="resources/css/jqm-icon-pack-fa.css">
-		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.0/jquery.mobile.structure-1.4.0.min.css" />
-		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-		<script src="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script>
-	</head>
-	<body>
-		<div data-role="page" data-theme="a">
-			<div data-role="header" data-position="inline">
-				<h1>BusBooster</h1>
-				<div data-role="navbar">
-					<ul>
-						<li><a href="index.html" data-icon="location-arrow">Near Me</a></li>
-						<li><a href="favorite.html" data-icon="star">Favorite</a></li>
-						<li><a href="myride.html" data-icon="user" class="ui-btn-active">My Ride</a></li>
-						<li><a href="map.html" data-icon="map-marker">Map</a></li>
-						<li><a href="settings.html" data-icon="gear">Settings</a></li>
-					</ul>
-				</div>
-			</div>
-			<div data-role="content" data-theme="a">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>BusBooster</title>
+        <link rel="stylesheet" href="themes/Bootstrap.css">
+        <link rel="stylesheet" href="resources/css/jqm-icon-pack-fa.css">
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.0/jquery.mobile.structure-1.4.0.min.css" />
+        <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script>
+    </head>
+    <body>
+        <div data-role="page" data-theme="a">
+            <div data-role="header" data-position="inline">
+                <h1>BusBooster</h1>
+                <div data-role="navbar">
+                    <ul>
+                        <li><a data-ajax="false" href="index.html" data-icon="location-arrow">Near Me</a></li>
+                        <li><a data-ajax="false" href="favorite.html" data-icon="star">Feedback</a></li>
+                        <li><a data-ajax="false" href="myride.html" data-icon="user" class="ui-btn-active">My Ride</a></li>
+                        <li><a data-ajax="false" href="map.html" data-icon="map-marker">Map</a></li>
+                        <li><a data-ajax="false" href="settings.html" data-icon="gear">Settings</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div data-role="content" data-theme="a">
 
-				<form action="/BusBooster-war/webresources/sendInfo" method="post">
+                <form action="/myride_onboard.html" method="get">
 
-					<div data-role="fieldcontain">
-						<label for="busNo">Bus Number:</label>
-						<input type="text" name="busNo" id="busNo" value=""  />
-					</div>
+                    <div data-role="fieldcontain">
+                        <label for="name">Bus Number:</label>
+                        <input type="text" name="name" id="name" value="A1"  />
+                    </div>
 
-					<div data-role="fieldcontain">
-						<label for="direction">Direction:</label>
-						<input type="text" name="direction" id="direction" value=""  />
-					</div>
+                    <div data-role="fieldcontain">
+                        <label for="busstop">Bus Stop Number:</label>
+                        <input type="text" name="busstop" id="busstop" value="3"  />
+                    </div>
 
-					<div data-role="fieldcontain">
-						<label for="select-choice-a" class="select">Direction:</label>
-						<select name="select-choice-a" id="select-choice-a" data-native-menu="false">
-							<option value="SCI-BIZ-PGP">SCI-BIZ-PGP</option>
-							<option value="BIZ-SCI-PGP">BIZ-SCI-PGP</option>
-						</select>
-					</div>
+                    <div data-role="fieldcontain">
+                        <label for="direction">Direction:</label>
+                        <input type="text" name="direction" id="direction" value="SCI-BIZ-PGP"  />
+                    </div>
 
-					<div class="ui-body ui-body-b">
-                                            <div class="ui-block"><button type="submit" data-theme="d">Submit</button></div>
-					</div>
-				</form>
+                    <div class="ui-body ui-body-b">
+                        <div class="ui-block"><button type="submit" data-theme="d">Submit</button></div>
+                    </div>
+                </form>
 
-			</div>
-		</div>
-	</body>
+            </div>
+        </div>
+    </body>
 </html>

@@ -7,6 +7,7 @@ package session;
 
 import entity.Bus;
 import entity.BusData;
+import entity.BusStop;
 import entity.User;
 import java.sql.Timestamp;
 import java.util.List;
@@ -21,6 +22,7 @@ public interface DataManagementSessionBeanLocal {
     public User getBusNumberAndDirection(String busNo, String direction, String busStopNumber); // no existing bus - create. bus exists - attach user to bus. create new user currently.
     public BusData updateRecord(Long userId, Double Longitude, Double Latitude, Double speed);
     public Boolean archiveData(List<BusData> busDataList);
+//    public List<BusStop> getBusStopList(Double latitude, Double longitude);
     
     //for test
     public int getCustomerCount();

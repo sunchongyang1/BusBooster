@@ -7,6 +7,7 @@ package entity;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,17 +23,37 @@ public class Feedback implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
+    private Long userId;
     private String username;
     private String email;
     private Timestamp feedbackTime;
-    private Boolean onboard;
+    private Boolean onboard;// no use
     private Long busId;
     private String busNo;
     private String direction;
     
     private Double latitude;
     private Double longitude;
-    private Double delay;
+    private Integer delay;
+    
+    private Boolean isBusBreakDown;
+    private Boolean trafficJam;
+    
+    public Feedback() {}
+    
+    public Feedback(Long userId, Long busId, String busNo, String direction, Double latitude, Double longitude) {
+        this.setUserId(userId);
+        this.setBusId(busId);
+        this.setBusNo(busNo);
+        this.setDirection(direction);
+        this.setLatitude(latitude);
+        this.setLongitude(longitude);
+        Date now = new Date();
+        Timestamp time = new Timestamp(now.getTime());
+        this.setFeedbackTime(time);
+        this.setOnboard(Boolean.TRUE);
+    }
 
     public Long getId() {
         return id;
@@ -194,17 +215,59 @@ public class Feedback implements Serializable {
     }
 
     /**
+     * @return the isBusBreakDown
+     */
+    public Boolean getIsBusBreakDown() {
+        return isBusBreakDown;
+    }
+
+    /**
+     * @param isBusBreakDown the isBusBreakDown to set
+     */
+    public void setIsBusBreakDown(Boolean isBusBreakDown) {
+        this.isBusBreakDown = isBusBreakDown;
+    }
+
+    /**
+     * @return the userId
+     */
+    public Long getUserId() {
+        return userId;
+    }
+
+    /**
+     * @param userId the userId to set
+     */
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    /**
      * @return the delay
      */
-    public Double getDelay() {
+    public Integer getDelay() {
         return delay;
     }
 
     /**
      * @param delay the delay to set
      */
-    public void setDelay(Double delay) {
+    public void setDelay(Integer delay) {
         this.delay = delay;
+    }
+
+    /**
+     * @return the trafficJam
+     */
+    public Boolean getTrafficJam() {
+        return trafficJam;
+    }
+
+    /**
+     * @param trafficJam the trafficJam to set
+     */
+    public void setTrafficJam(Boolean trafficJam) {
+        this.trafficJam = trafficJam;
     }
     
 }

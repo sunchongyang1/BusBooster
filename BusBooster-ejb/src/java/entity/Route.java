@@ -24,10 +24,8 @@ public class Route implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @OneToOne
-    private BusStop startStop;
-    @OneToOne
-    private BusStop endStop;
+    private Long startStopId;
+    private Long endStopId;
     private Double distance;
     
     private Double travelTime;
@@ -36,9 +34,9 @@ public class Route implements Serializable {
     public Route() {}
     
     // only for pupolate bean
-    public Route(BusStop start, BusStop end, Double distance) {
-        this.setStartStop(start);
-        this.setEndStop(end);
+    public Route(Long start, Long end, Double distance) {
+        this.setStartStopId(start);
+        this.setEndStopId(end);
         this.setDistance(distance);
     }
 
@@ -118,31 +116,30 @@ public class Route implements Serializable {
     }
 
     /**
-     * @return the startStop
+     * @return the startStopId
      */
-    public BusStop getStartStop() {
-        return startStop;
+    public Long getStartStopId() {
+        return startStopId;
     }
 
     /**
-     * @param startStop the startStop to set
+     * @param startStopId the startStopId to set
      */
-    public void setStartStop(BusStop startStop) {
-        this.startStop = startStop;
+    public void setStartStopId(Long startStopId) {
+        this.startStopId = startStopId;
     }
 
     /**
-     * @return the endStop
+     * @return the endStopId
      */
-    public BusStop getEndStop() {
-        return endStop;
+    public Long getEndStopId() {
+        return endStopId;
     }
 
     /**
-     * @param endStop the endStop to set
+     * @param endStopId the endStopId to set
      */
-    public void setEndStop(BusStop endStop) {
-        this.endStop = endStop;
+    public void setEndStopId(Long endStopId) {
+        this.endStopId = endStopId;
     }
-    
 }

@@ -6,8 +6,13 @@
 package services;
 
 import entity.Bus;
+import entity.BusSimple;
 import entity.BusStop;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
@@ -15,17 +20,25 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import session.BusManagementSessionBeanLocal;
+import session.FeedbackManagementSessionBeanLocal;
 
 /**
  * REST Web Service
  *
  * @author chongyangsun
  */
-@Path("updates")
+@Path("buses")
+@RequestScoped
 public class BusDataSources {
 
     @Context
     private UriInfo context;
+    
+    @Inject
+    BusManagementSessionBeanLocal bmsbl;
+    @Inject
+    FeedbackManagementSessionBeanLocal fmsbl;
 
     /**
      * Creates a new instance of BusDataSources
@@ -39,19 +52,15 @@ public class BusDataSources {
      */
     @GET
     @Produces("application/json")
-    public Bus getJson() {
+    public List<BusSimple> getJson() {
         //TODO return proper representation object
-        return new Bus("Bus 1", "AAAA", new Double(0), new Double(0), new BusStop(), new BusStop());
-//        throw new UnsupportedOperationException();
+        List<Bus> buses = bmsbl.getAllBuses();
+        List<BusSimple> result = new ArrayList();
+        for(Bus b: buses) {
+            BusSimple temp = new BusSimple(b.getBusNo(), b.getDirection(), b.getLatitude(), b.getLongitude(), 0, fmsbl.getDelayFromFeedback(b.getId()), fmsbl.isBusBreakDown(b.getId()), b.getNumberOfUserOnboard());
+            result.add(temp);
+        }
+        return result;
     }
 
-    /**
-     * PUT method for updating or creating an instance of BusDataSources
-     * @param content representation for the resource
-     * @return an HTTP response with content of the updated or created resource.
-     */
-    @PUT
-    @Consumes("application/json")
-    public void putJson(String content) {
-    }
 }

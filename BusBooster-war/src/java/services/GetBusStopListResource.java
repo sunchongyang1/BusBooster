@@ -5,14 +5,37 @@
  */
 package services;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import entity.Bus;
+import entity.BusRoute;
+import entity.BusRouteSimple;
+import entity.BusStop;
+import entity.BusStopSimple;
+import entity.Feedback;
+import java.util.ArrayList;
+import java.util.List;
+import javax.ejb.EJB;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
+import org.primefaces.json.JSONObject;
+import session.FeedbackManagementSessionBeanLocal;
+import session.PopulateDataManagementSessionBean;
+import session.PopulateDataManagementSessionBeanLocal;
+import session.PredictionManagementSessionBeanLocal;
 
 /**
  * REST Web Service
@@ -20,10 +43,16 @@ import javax.ws.rs.PUT;
  * @author chongyangsun
  */
 @Path("getBusStopList")
+@RequestScoped
 public class GetBusStopListResource {
 
     @Context
     private UriInfo context;
+    
+    @Inject
+    PredictionManagementSessionBeanLocal pmsbl;
+    @Inject
+    FeedbackManagementSessionBeanLocal fmsbl;
 
     /**
      * Creates a new instance of GetBusStopListResource
@@ -33,22 +62,41 @@ public class GetBusStopListResource {
 
     /**
      * Retrieves representation of an instance of services.GetBusStopListResource
-     * @return an instance of java.lang.String
+     * @return an List of bus stops
      */
     @GET
     @Produces("application/json")
-    public String getJson() {
-        //TODO return proper representation object
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * PUT method for updating or creating an instance of GetBusStopListResource
-     * @param content representation for the resource
-     * @return an HTTP response with content of the updated or created resource.
-     */
-    @PUT
-    @Consumes("application/json")
-    public void putJson(String content) {
+    public List<BusRouteSimple> getBusRouteByStop(@QueryParam("busStopId") @DefaultValue("1") String busStopNo) {
+        System.out.println("inside get bus route by stop");
+        List<BusRoute> busRouteList = pmsbl.getBusRouteByBusStop(busStopNo);
+        List<BusRouteSimple> result = new ArrayList();
+//        System.out.println(busRouteList);
+        for(BusRoute b: busRouteList) {
+            
+            
+            BusRouteSimple temp = new BusRouteSimple(b.getId(), b.getBusNo(), b.getDirection());
+            
+            for(BusStop a: b.getBusStopList()) {
+                temp.getBusStopIdList().add(a.getId());
+            }
+            
+            
+            //
+            Bus bus = pmsbl.getNearestBus(busStopNo, busStopNo);
+            if(bus == null) {
+                temp.setArrivalTime(-1);
+                temp.setNumberOfUserOnboard(0);
+                temp.setDelay(0);
+                temp.setBusBreakDown(Boolean.FALSE);
+            } else {
+                temp.setArrivalTime(pmsbl.getArrivalTime(busStopNo, busStopNo).intValue());
+                temp.setNumberOfUserOnboard(bus.getNumberOfUserOnboard());
+                temp.setDelay(fmsbl.getDelayFromFeedback(bus.getId()));
+                temp.setBusBreakDown(fmsbl.isBusBreakDown(bus.getId()));
+            }
+            
+            result.add(temp);
+        }
+        return result;
     }
 }

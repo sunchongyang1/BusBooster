@@ -95,4 +95,11 @@ public class BusManagementSessionBean implements BusManagementSessionBeanLocal {
     public Boolean remove(Long busId) {
         return false;
     }
+    
+    @Override
+    public List<Bus> getAllBuses() {
+        Query q = em.createQuery("SELECT b FROM Bus b");
+        List<Bus> result = new ArrayList(q.getResultList());
+        return result;
+    }
 }

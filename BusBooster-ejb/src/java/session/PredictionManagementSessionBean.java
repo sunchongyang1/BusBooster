@@ -11,6 +11,7 @@ import entity.BusData;
 import entity.BusRoute;
 import entity.BusStop;
 import entity.DepartureTime;
+import entity.Feedback;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -217,26 +218,35 @@ public class PredictionManagementSessionBean implements PredictionManagementSess
             System.out.println("No Bus Stop Nearby!");
             return null;
         } else {
+//            System.out.println("BusStopList size "+busStopList.size());
             // sort the bus stop according to geo distance to the current location and return the result list from nearest to farthest
             List<BusStop> result = new ArrayList();
-            List<BusStop> temp = new ArrayList();
+//            List<BusStop> temp = new ArrayList();
+            boolean flag = true;
             for (BusStop b : busStopList) {
                 if (result.isEmpty()) {
+//                    System.out.println("I appear only once!");
                     result.add(b);
-                    temp = result;
+//                    temp = result;
                 } else {
-                    for (BusStop s : temp) {
+                    flag = true;
+//                    System.out.println("temp size "+temp.size());
+                    for (BusStop s : result) {
                         if (this.calculateDistance(lat, lon, b.getLatitude(), b.getLongitude())
                                 < this.calculateDistance(lat, lon, s.getLatitude(), s.getLongitude())) {
                             result.add(result.indexOf(s), b);
+//                            System.out.print(result.size()+" "+temp.size());
+//                            System.out.println("Break here");
+                            flag = false;
                             break;
                         }
+//                        System.out.println("Not this one after break here!");
                     }
-                    if (temp.size() != result.size()) {
-                        temp = result;
-                    } else {
+//                    System.out.println("temp "+temp.size()+" result "+result.size());
+                    if (flag) {
+//                        System.out.print("append to the last");
                         result.add(b);
-                        temp = result;
+//                        temp = result;
                     }
                 }
             }
@@ -486,5 +496,69 @@ public class PredictionManagementSessionBean implements PredictionManagementSess
 
         dist_m = Math.sqrt(Math.pow(deltaLat * m_per_deg_lat, 2) + Math.pow(deltaLon * m_per_deg_lon, 2));
         return dist_m;
+    }
+    
+    @Override
+    public Bus getNearestBus(String busStopNumber, String busNo) {
+        // first check whether there are buses available
+        Query q = em.createQuery("SELECT b FROM Bus b WHERE b.busNo=:no");
+        q.setParameter("no", busNo);
+        List<Bus> busList = new ArrayList(q.getResultList());
+        if (busList.isEmpty()) {
+            // no bus prediction available!
+            System.out.println("There is currently no bus available for this route!");
+            return null; // no prediction returns -1 or null
+        } else {
+            // select the bus route in order to get the bus stop list
+            Query query = em.createQuery("SELECT b FROM BusRoute b WHERE b.busNo=:busno");
+            query.setParameter("busno", busNo);
+            BusRoute busRoute = (BusRoute) query.getSingleResult();
+            List<BusStop> busStopList = busRoute.getBusStopList();
+            // create new list contains all bus stop before current bus stop(included) !!!inverse sequence!!!
+            // temp list contains bus stop in the sequence of the distance from current bus stop from closest to farthest
+            List<BusStop> temp = new ArrayList();
+            for (BusStop m : busStopList) {
+                if (m.getBusStopNo().equals(busStopNumber)) {
+                    temp.add(0, m);
+                    break;
+                } else {
+                    temp.add(0, m);
+                }
+            }
+            Bus bus = new Bus();
+            List<Bus> busListTemp = new ArrayList();
+            // select the nearest bus available for prediction
+            for (BusStop a : temp) {
+                for (Bus b : busList) {
+                    if (b.getNextStop().getBusStopNo().equals(a.getBusStopNo())) {
+                        busListTemp.add(b);
+                    }
+                }
+                if (!busListTemp.isEmpty()) {
+                    break;
+                }
+            }
+            // busListTemp contains a list of buses that approaches the nearest stop near current stop
+            for (Bus c : busListTemp) {
+                if (bus.getDistanceToNextStop() == null) {
+                    bus = c;
+                } else if (bus.getDistanceToNextStop() > c.getDistanceToNextStop()) {
+                    bus = c;
+                }
+            }
+            return bus;
+        }
+    }
+    
+    @Override
+    public List<Feedback> getFeedback(Bus bus) {
+        Query q = em.createQuery("SELECT f FROM Feedback f WHERE f.busId=:id");
+        q.setParameter("id", bus.getId());
+        List<Feedback> feedbacks = new ArrayList(q.getResultList());
+        if(feedbacks.isEmpty()) {
+            return null;
+        } else {
+            return feedbacks;
+        }
     }
 }

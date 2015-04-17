@@ -1,100 +1,86 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1">
-		<title>BusBooster</title>
-		<link rel="stylesheet" href="themes/Bootstrap.css">
-		<link rel="stylesheet" href="resources/css/jqm-icon-pack-fa.css">
-		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.0/jquery.mobile.structure-1.4.0.min.css" />
-		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-		<script src="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script>
-	</head>
-	<body>
-		<div data-role="page" data-theme="a">
-			<div data-role="header" data-position="inline">
-				<h1>BusBooster</h1>
-				<div data-role="navbar">
-					<ul>
-						<li><a href="index.html" data-icon="location-arrow">Near Me</a></li>
-						<li><a href="favorite.html" data-icon="star">Favorite</a></li>
-						<li><a href="myride.html" data-icon="user">My Ride</a></li>
-						<li><a href="map.html" data-icon="map-marker" class="ui-btn-active">Map</a></li>
-						<li><a href="settings.html" data-icon="gear">Settings</a></li>
-					</ul>
-				</div>
-			</div>
-			<div data-role="content" data-theme="a">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>BusBooster</title>
+        <link rel="stylesheet" href="themes/Bootstrap.css">
+        <link rel="stylesheet" href="resources/css/busbooster.css">
+        <link rel="stylesheet" href="resources/css/jqm-icon-pack-fa.css">
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.0/jquery.mobile.structure-1.4.0.min.css" />
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+        <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script>
+        <script type="text/javascript" src="resources/js/jquery.ui.map.full.min.js"></script>
+        <script type="text/javascript">
+            var N = 5000; //every 5 second
+            // var clearmarkers = function() {$('#map_canvas').gmap('clearMarkers')};
+            var currentLocation = new google.maps.LatLng(1.293357, 103.775188);
+            var timeout = function () {
+                setTimeout(function () {
+                    $('#map_canvas').gmap({'zoom': 15, 'center': currentLocation});
+                    $('#map_canvas').gmap('clear', 'markers');
+                    $('#map_canvas').gmap('addMarker', {'position': currentLocation});
+                    $.getJSON('http://localhost:8080/BusBooster-war/webresources/buses', function (data) {
+                        $.each(data, function (i, marker) {
+                            $('#map_canvas').gmap('addMarker', {
+                                'position': new google.maps.LatLng(marker.latitude, marker.longitude),
+                                'icon': new google.maps.MarkerImage("http://localhost:8080/BusBooster-war/resources/images/marker.png", null, null, null, new google.maps.Size(30, 30)),
+                                'bounds': false
+                            }).mouseover(function () {
+                                $('#map_canvas').gmap('openInfoWindow', {'content': '<div><h3>' + marker.busNo + ' - Direction: '+marker.direction+'</h3><div>Arrives in ' + marker.arrivalTime + ' seconds</div></div><div><p>Number of user onboard: ' + marker.numberOfUserOnboard + '</p></div>\n\
+                            <div><p>Possible delay from feedback: '+marker.delay+' min</p></div><div><p>Is bus break down? '+marker.breakDown+'</p></div>'}, this);
+                            });
+                        });
+                        timeout();
+                    });
+                }, N);
+            }
 
-				<a href="https://github.com/commadelimited/jQuery-Mobile-Bootstrap-Theme" data-role="button" data-icon="star">Get the code</a>
+            $("#map").live("pageshow", function () {
+                $('#map_canvas').gmap({'zoom': 15, 'center': currentLocation});
+                $('#map_canvas').gmap().bind('init', function () {
+                    $.getJSON('http://localhost:8080/BusBooster-war/webresources/buses', function (data) {
+                        $.each(data, function (i, marker) {
+                            $('#map_canvas').gmap('addMarker', {
+                                'position': new google.maps.LatLng(marker.latitude, marker.longitude),
+                                'icon': new google.maps.MarkerImage("http://localhost:8080/BusBooster-war/resources/images/marker.png", null, null, null, new google.maps.Size(30, 30)),
+                                'bounds': false
+                            }).mouseover(function () {
+                                $('#map_canvas').gmap('openInfoWindow', {'content': '<div><h3>' + marker.busNo + ' - Direction: '+marker.direction+'</h3><div>Arrives in ' + marker.arrivalTime + ' seconds</div></div><div><p>Number of user onboard: ' + marker.numberOfUserOnboard + '</p></div>\n\
+                            <div><p>Possible delay from feedback: '+marker.delay+' min</p></div><div><p>Is bus break down? '+marker.breakDown+'</p></div>'}, this);
+                            });
+                        });
+                        timeout();
+                    });
+                });
 
-				<h2>Navigation</h2>
+                $('#map_canvas').gmap('addMarker', {
+                    'position': currentLocation,
+                    // 'bounds': true,
+                });
+            });
 
-				<div data-role="header" data-position="inline">
-					<a href="index.html" data-icon="delete" data-theme="c">Cancel</a>
-					<h1>Edit Contact</h1>
-					<a href="index.html" data-icon="check" data-theme="d">Save</a>
-				</div><br />
+        </script>
+    </head>
+    <body>
+        <div data-role="page" data-theme="a" id="map">
+            <div data-role="header" data-position="inline">
+                <h1>BusBooster</h1>
+                <div data-role="navbar">
+                    <ul>
+                        <li><a data-ajax="false" href="index.html" data-icon="location-arrow">Near Me</a></li>
+                        <li><a data-ajax="false" href="favorite.html" data-icon="star">Feedback</a></li>
+                        <li><a data-ajax="false" href="myride.html" data-icon="user">My Ride</a></li>
+                        <li><a data-ajax="false" href="map.html" data-icon="map-marker" class="ui-btn-active">Map</a></li>
+                        <li><a data-ajax="false" href="settings.html" data-icon="gear">Settings</a></li>
+                    </ul>
+                </div>
+            </div>
 
-				<div data-role="footer" class="ui-bar">
-					<a href="index.html" data-role="button" data-icon="plus">Add</a>
-					<a href="index.html" data-role="button" data-icon="arrow-u">Up</a>
-					<a href="index.html" data-role="button" data-icon="arrow-d">Down</a>
-				</div><br />
-
-				<div data-role="footer" data-theme="f">
-					<div data-role="navbar">
-						<ul>
-							<li><a href="#" data-icon="check">Yes</a></li>
-							<li><a href="#" data-icon="delete">No</a></li>
-							<li><a href="#" data-icon="alert">Maybe</a></li>
-						</ul>
-					</div>
-				</div><br />
-
-				<div data-role="footer" data-theme="a">
-					<a href="index.html" data-role="button" data-icon="arrow-l" data-iconpos="right">left</a>
-					<a href="index.html" data-role="button" data-icon="arrow-r" data-iconpos="right">right</a>
-					<a href="index.html" data-role="button" data-icon="arrow-u" data-iconpos="right">up</a>
-					<a href="index.html" data-role="button" data-icon="arrow-d" data-iconpos="right">down</a>
-				</div>
-
-				<div data-role="footer" data-theme="b">
-					<a href="index.html" data-role="button" data-icon="arrow-l" data-iconpos="right">left</a>
-					<a href="index.html" data-role="button" data-icon="arrow-r" data-iconpos="right">right</a>
-					<a href="index.html" data-role="button" data-icon="arrow-u" data-iconpos="right">up</a>
-					<a href="index.html" data-role="button" data-icon="arrow-d" data-iconpos="right">down</a>
-				</div>
-
-			    <div data-role="footer" data-theme="c">
-					<a href="index.html" data-role="button" data-icon="arrow-l" data-iconpos="right">left</a>
-					<a href="index.html" data-role="button" data-icon="arrow-r" data-iconpos="right">right</a>
-					<a href="index.html" data-role="button" data-icon="arrow-u" data-iconpos="right">up</a>
-					<a href="index.html" data-role="button" data-icon="arrow-d" data-iconpos="right">down</a>
-				</div>
-
-				<div data-role="footer" data-theme="d">
-					<a href="index.html" data-role="button" data-icon="arrow-l" data-iconpos="right">left</a>
-					<a href="index.html" data-role="button" data-icon="arrow-r" data-iconpos="right">right</a>
-					<a href="index.html" data-role="button" data-icon="arrow-u" data-iconpos="right">up</a>
-					<a href="index.html" data-role="button" data-icon="arrow-d" data-iconpos="right">down</a>
-				</div>
-
-				<div data-role="footer" data-theme="e">
-					<a href="index.html" data-role="button" data-icon="arrow-l" data-iconpos="right">left</a>
-					<a href="index.html" data-role="button" data-icon="arrow-r" data-iconpos="right">right</a>
-					<a href="index.html" data-role="button" data-icon="arrow-u" data-iconpos="right">up</a>
-					<a href="index.html" data-role="button" data-icon="arrow-d" data-iconpos="right">down</a>
-				</div>
-
-				<div data-role="footer" data-theme="f">
-					<a href="index.html" data-role="button" data-icon="arrow-l" data-iconpos="right">left</a>
-					<a href="index.html" data-role="button" data-icon="arrow-r" data-iconpos="right">right</a>
-					<a href="index.html" data-role="button" data-icon="arrow-u" data-iconpos="right">up</a>
-					<a href="index.html" data-role="button" data-icon="arrow-d" data-iconpos="right">down</a>
-				</div>
-
-			</div>
-		</div>
-	</body>
+            <div role="main" class="ui-content" id="map_canvas">
+                <!-- map loads here... -->
+            </div>
+        </div>
+    </body>
 </html>

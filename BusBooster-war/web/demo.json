@@ -1,0 +1,6 @@
+[
+	{ "latitude":1.294847, "longitude":103.784444, "title":"A1-1", "content":"<div><h3>A1</h3><div>15 min</div></div><div><p>Number of user onboard: 10</p></div>" },
+	{ "latitude":1.297400, "longitude":103.781030, "title":"A1-3", "content":"<div><h3>A1</h3><div>10 min</div></div><div><p>Number of user onboard: 5</p></div>" },
+	{ "latitude":1.297287, "longitude":103.778576, "title":"A1-4", "content":"<div><h3>A1</h3><div>8 min</div></div><div><p>Number of user onboard: 4</p></div>" },
+	{ "latitude":1.294301, "longitude":103.773801, "title":"A1-7", "content":"<div><h3>A1</h3><div>3 min</div></div><div><p>Number of user onboard: 10</p></div>" }
+]

@@ -34,6 +34,8 @@ public class DataManagementSessionBean implements DataManagementSessionBeanLocal
     
     @Override
     public User getBusNumberAndDirection(String busNo, String direction, String busStopNumber) {
+        // currently user is created automatically, everytime create a new user. only for demonstration.
+        // in real world need to register as permenant user
         Date now = new Date();
         Timestamp time = new Timestamp(now.getTime());
         String username = String.valueOf(now.getTime()) + busNo + direction;

@@ -8,6 +8,7 @@ package session;
 import entity.Bus;
 import entity.BusStop;
 import java.sql.Timestamp;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -20,4 +21,5 @@ public interface BusManagementSessionBeanLocal {
     //following method no use currently
     public Boolean update(Long busId, String busNo, String direction, Double longitude, Double latitude, Double speed, Timestamp lastUpdateTime);
     public Boolean remove(Long busId);
+    public List<Bus> getAllBuses();
 }

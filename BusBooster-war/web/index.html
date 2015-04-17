@@ -1,39 +1,53 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1">
-		<title>BusBooster</title>
-		<link rel="stylesheet" href="themes/Bootstrap.css">
-		<link rel="stylesheet" href="resources/css/jqm-icon-pack-fa.css">
-		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.0/jquery.mobile.structure-1.4.0.min.css" />
-		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-		<script src="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script>
-	</head>
-	<body>
-		<div data-role="page" data-theme="a">
-			<div data-role="header" data-position="inline">
-				<h1>BusBooster</h1>
-				<div data-role="navbar">
-					<ul>
-						<li><a href="index.html" data-icon="location-arrow" class="ui-btn-active">Near Me</a></li>
-						<li><a href="favorite.html" data-icon="star">Favorite</a></li>
-						<li><a href="myride.html" data-icon="user">My Ride</a></li>
-						<li><a href="map.html" data-icon="map-marker">Map</a></li>
-						<li><a href="settings.html" data-icon="gear">Settings</a></li>
-					</ul>
-				</div>
-			</div>
-			<div data-role="content" data-theme="a">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>BusBooster</title>
+        <link rel="stylesheet" href="themes/Bootstrap.css">
+        <link rel="stylesheet" href="resources/css/jqm-icon-pack-fa.css">
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.0/jquery.mobile.structure-1.4.0.min.css" />
+        <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script>
+        <script>
+            $(function () {
+                var getBusStopListURL = "http://localhost:8080/BusBooster-war/webresources/getBusStop";
+                    $.getJSON(getBusStopListURL, function (data) {
+                        var $ul = $('#busStopList');
+                        $.each(data, function (idx, item) {
+//                            $ul.append('<li style="color: ' + item.color + '">' + item.name + '-' + item['class'] + '</li>')
+                            $ul.append('<a href="busList.html?busStopNo='+ item.busStopNo +'&busStopName='+item.busStopName+'" data-role="button" data-ajax="false" data-theme="a" data-icon="arrow-right" class="ui-link ui-btn ui-btn-a ui-icon-arrow-right ui-btn-icon-left ui-shadow ui-corner-all" role="button">'+ item.busStopName +'</a>')
+                        });
+                    });
+                $("#refresh").click(function(){
+                    location.reload();
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div data-role="page" data-theme="a">
+            <div data-role="header" data-position="inline">
+                <h1>BusBooster</h1>
+                <div data-role="navbar">
+                    <ul>
+                        <li><a data-ajax="false" href="index.html" data-icon="location-arrow" class="ui-btn-active">Near Me</a></li>
+                        <li><a data-ajax="false" href="favorite.html" data-icon="star">Feedback</a></li>
+                        <li><a data-ajax="false" href="myride.html" data-icon="user">My Ride</a></li>
+                        <li><a data-ajax="false" href="map.html" data-icon="map-marker">Map</a></li>
+                        <li><a data-ajax="false" href="settings.html" data-icon="gear">Settings</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div data-role="content" data-theme="a">
+                <button id="refresh" data-icon="star" data-role="button">Refresh</button>
 
-				<a href="" data-role="button" data-icon="star">Refresh</a>
-
-				<a href="busList.html" data-role="button" data-theme="a" data-icon="arrow-right">PGP Terminal</a>
-				<a href="busList.html" data-role="button" data-theme="a" data-icon="arrow-right">Kent Ridge MRT</a>
-				<a href="busList.html" data-role="button" data-theme="a" data-icon="arrow-right">LT29</a>
-				<a href="busList.html" data-role="button" data-theme="a" data-icon="arrow-right">BIZ2</a>
-
-			</div>
-		</div>
-	</body>
+                <h3> Bus Stop Near By </h3>
+                <hr />
+                <div id="busStopList" class="ui-body ui-body-a">
+                    <!--<a href="busList.html" data-role="button" data-theme="a" data-icon="arrow-right">PGP Terminal</a>-->
+                </div>
+            </div>
+        </div>
+    </body>
 </html>
