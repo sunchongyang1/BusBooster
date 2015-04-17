@@ -5,6 +5,8 @@
  */
 package session;
 
+import entity.Bus;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -13,5 +15,5 @@ import javax.ejb.Local;
  */
 @Local
 public interface SimulationSessionBeanLocal {
-    
+    public Boolean createNewBus(String busNo, String direction, List<Integer> dwells, List<Integer> speeds);
 }

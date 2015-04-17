@@ -84,11 +84,13 @@ public class GetBusStopListResource {
             //
             Bus bus = pmsbl.getNearestBus(busStopNo, busStopNo);
             if(bus == null) {
+                System.out.println("no bus available");
                 temp.setArrivalTime(-1);
                 temp.setNumberOfUserOnboard(0);
                 temp.setDelay(0);
                 temp.setBusBreakDown(Boolean.FALSE);
             } else {
+                System.out.println("bus found!");
                 temp.setArrivalTime(pmsbl.getArrivalTime(busStopNo, busStopNo).intValue());
                 temp.setNumberOfUserOnboard(bus.getNumberOfUserOnboard());
                 temp.setDelay(fmsbl.getDelayFromFeedback(bus.getId()));

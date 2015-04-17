@@ -1,16 +1,99 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
-        <title>Facelet Title</title>
+        <title>BusBooster | Control Panel</title>
     </h:head>
     <h:body>
-        Hello from Facelets
+        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+        Register new bus
         <br />
-        <h:link outcome="welcomePrimefaces" value="Primefaces welcome page" />
-        <br />
-        <h:link outcome="welcomePrimefaces" value="Primefaces welcome page" />
+        <h:form id="server">
+            <p:growl id="growl1" life="3000" />
+            <h:panelGrid columns="2" cellpadding="5">
+                <p:commandButton type="submit" value="Start Server" update="server" icon="ui-icon-check" 
+                                 actionListener="#{serverManagedBean.startServer()}"/>
+                <p:commandButton type="submit" value="Stop Server" update="server" icon="ui-icon-check" 
+                                 actionListener="#{serverManagedBean.stopServer()}"/>
+            </h:panelGrid>
+        </h:form>
+        <h:form id="register">
+            <p:growl id="growl" life="3000" />
+            Dwell Time (seconds)
+            <h:panelGrid columns="2" cellpadding="5">
+                <p:outputLabel for="dwell1" value="PGP Start: " />
+                <p:inputText id="dwell1" value="#{simulationManagedBean.dwell1}"/>
+                <p:outputLabel for="dwell2" value="After Science Park Drive: " />
+                <p:inputText id="dwell2" value="#{simulationManagedBean.dwell2}"/>
+                <p:outputLabel for="dwell3" value="KR MRT: " />
+                <p:inputText id="dwell3" value="#{simulationManagedBean.dwell3}"/>
+                <p:outputLabel for="dwell4" value="NUH: " />
+                <p:inputText id="dwell4" value="#{simulationManagedBean.dwell4}"/>
+                <p:outputLabel for="dwell5" value="LT29: " />
+                <p:inputText id="dwell5" value="#{simulationManagedBean.dwell5}"/>
+                <p:outputLabel for="dwell6" value="University Hall: " />
+                <p:inputText id="dwell6" value="#{simulationManagedBean.dwell6}"/>
+                <p:outputLabel for="dwell7" value="OPP. UHC: " />
+                <p:inputText id="dwell7" value="#{simulationManagedBean.dwell7}"/>
+                <p:outputLabel for="dwell8" value="YIH: " />
+                <p:inputText id="dwell8" value="#{simulationManagedBean.dwell8}"/>
+                <p:outputLabel for="dwell9" value="Central Library: " />
+                <p:inputText id="dwell9" value="#{simulationManagedBean.dwell9}"/>
+                <p:outputLabel for="dwell10" value="LT13: " />
+                <p:inputText id="dwell10" value="#{simulationManagedBean.dwell10}"/>
+                <p:outputLabel for="dwell11" value="AS7: " />
+                <p:inputText id="dwell11" value="#{simulationManagedBean.dwell11}"/>
+                <p:outputLabel for="dwell12" value="COM2: " />
+                <p:inputText id="dwell12" value="#{simulationManagedBean.dwell12}"/>
+                <p:outputLabel for="dwell13" value="BIZ2: " />
+                <p:inputText id="dwell13" value="#{simulationManagedBean.dwell13}"/>
+                <p:outputLabel for="dwell14" value="OPP. House 12: " />
+                <p:inputText id="dwell14" value="#{simulationManagedBean.dwell14}"/>
+                <p:outputLabel for="dwell15" value="House 7: " />
+                <p:inputText id="dwell15" value="#{simulationManagedBean.dwell15}"/>
+
+            </h:panelGrid>
+            Travel Speed For Each Route (seconds)
+            <h:panelGrid columns="2" cellpadding="5">
+                <p:outputLabel for="speed1" value="PGP Start: " />
+                <p:inputText id="speed1" value="#{simulationManagedBean.speed1}"/>
+                <p:outputLabel for="speed2" value="After Science Park Drive: " />
+                <p:inputText id="speed2" value="#{simulationManagedBean.speed2}"/>
+                <p:outputLabel for="speed3" value="KR MRT: " />
+                <p:inputText id="speed3" value="#{simulationManagedBean.speed3}"/>
+                <p:outputLabel for="speed4" value="NUH: " />
+                <p:inputText id="speed4" value="#{simulationManagedBean.speed4}"/>
+                <p:outputLabel for="speed5" value="LT29: " />
+                <p:inputText id="speed5" value="#{simulationManagedBean.speed5}"/>
+                <p:outputLabel for="speed6" value="University Hall: " />
+                <p:inputText id="speed6" value="#{simulationManagedBean.speed6}"/>
+                <p:outputLabel for="speed7" value="OPP. UHC: " />
+                <p:inputText id="speed7" value="#{simulationManagedBean.speed7}"/>
+                <p:outputLabel for="speed8" value="YIH: " />
+                <p:inputText id="speed8" value="#{simulationManagedBean.speed8}"/>
+                <p:outputLabel for="speed9" value="Central Library: " />
+                <p:inputText id="speed9" value="#{simulationManagedBean.speed9}"/>
+                <p:outputLabel for="speed10" value="LT13: " />
+                <p:inputText id="speed10" value="#{simulationManagedBean.speed10}"/>
+                <p:outputLabel for="speed11" value="AS7: " />
+                <p:inputText id="speed11" value="#{simulationManagedBean.speed11}"/>
+                <p:outputLabel for="speed12" value="COM2: " />
+                <p:inputText id="speed12" value="#{simulationManagedBean.speed12}"/>
+                <p:outputLabel for="speed13" value="BIZ2: " />
+                <p:inputText id="speed13" value="#{simulationManagedBean.speed13}"/>
+                <p:outputLabel for="speed14" value="OPP. House 12: " />
+                <p:inputText id="speed14" value="#{simulationManagedBean.speed14}"/>
+                <p:outputLabel for="speed15" value="House 7: " />
+                <p:inputText id="speed15" value="#{simulationManagedBean.speed15}"/>
+
+            </h:panelGrid>
+            <p:commandButton type="submit" value="Submit" update="register" icon="ui-icon-check" 
+                             actionListener="#{simulationManagedBean.registerBus()}"/>
+        </h:form>
     </h:body>
 </html>
 

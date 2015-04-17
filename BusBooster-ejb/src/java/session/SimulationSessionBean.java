@@ -5,7 +5,27 @@
  */
 package session;
 
+import entity.Bus;
+import entity.BusStop;
+import entity.Location;
+import entity.Route;
+import entity.SimulationInfo;
+import entity.User;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.Timeout;
+import javax.ejb.Timer;
+import javax.ejb.TimerService;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.tools.DocumentationTool;
 
 /**
  *
@@ -14,6 +34,152 @@ import javax.ejb.Stateless;
 @Stateless
 public class SimulationSessionBean implements SimulationSessionBeanLocal {
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    @PersistenceContext
+    private EntityManager em;
+
+    @Resource
+    private TimerService timerService;
+
+    @EJB
+    PredictionManagementSessionBeanLocal pmsbl;
+
+    @EJB
+    DataManagementSessionBeanLocal dmsbl;
+
+    @Override
+    public Boolean createNewBus(String busNo, String direction, List<Integer> dwells, List<Integer> speeds) {
+        Date now = new Date();
+        BusStop startStop = this.getBusStop("1");
+        BusStop endStop = this.getBusStop("2");
+        Bus bus = new Bus(busNo, direction, startStop.getLatitude(), startStop.getLongitude(), startStop, endStop);
+        bus.setDistanceFromPreviousStop(0.0);
+        bus.setDistanceToNextStop(startStop.getDistanceToNextStop());
+        bus.setTimeLeftLastStop(new Timestamp(now.getTime()));
+        em.persist(bus);
+        User user = new User("testUser");
+        em.persist(user);
+        bus.getUserList().add(user);
+        user.setBus(bus);
+        bus.setNumberOfUserOnboard(bus.getUserList().size());
+        em.merge(bus);
+        em.merge(user);
+        
+        System.out.println("check size " + dwells.size());
+
+        SimulationInfo si = new SimulationInfo(user.getId(), bus.getId(), busNo, direction, dwells, speeds);
+        em.persist(si);
+        System.out.println("SimulationInfo id " + si.getId() + " and check size " + si.getDwells().size());
+
+        //start simulation
+        System.out.println("Bus start running from PGP Start");
+        Timer timer = timerService.createTimer(10000, 10000, "s" + bus.getId() + "s" + si.getId());
+
+        return true;
+    }
+
+    private BusStop getBusStop(String busStopNo) {
+        Query q = em.createQuery("SELECT b FROM BusStop b WHERE b.busStopNo=:number");
+        q.setParameter("number", busStopNo);
+
+        return (BusStop) q.getSingleResult();
+    }
+
+    @Timeout
+    private void runSimulation(Timer timer) {
+        Date now = new Date();
+        String info = timer.getInfo().toString();
+        String[] temp = info.split("s");
+        Long busId = Long.valueOf(temp[1]);
+        System.out.println("Bus id is " + busId);
+        Long siId = Long.valueOf(temp[2]);
+        System.out.println("simulation id is " + siId);
+        Bus bus = em.find(Bus.class, busId);
+        SimulationInfo si = em.find(SimulationInfo.class, siId);
+        System.out.println(si.getDwells().size());
+        Query q = em.createQuery("SELECT r FROM Route r ORDER BY r.id ASC");
+        List<Route> routeList = new ArrayList(q.getResultList());
+
+        int total = 0; // time interval
+        int current = si.getCount() * 10; // time interval
+        int routeNo = 0; // current route that the bus is travelling on
+        int busStopsAt = 0; // the bus stop Number that the bus is currently stopped at. if during travel, this value is 0
+        for (int i = 0; i < 15; i++) {
+            total += si.getDwells().get(i);
+            if (total > current) {
+                busStopsAt = i + 1;//bus stop number starts at 1
+                routeNo = 0;
+                System.out.println("stop: break at i = " + i);
+                break;
+            }
+            total += routeList.get(i).getDistance() / si.getSpeeds().get(i);
+            if (total > current) {
+                routeNo = i + 1;// route number starts at 1
+                busStopsAt = 0;
+                System.out.println("travel: break at i = " + i);
+                break;
+            }
+            if (i == 14) {
+                //bus is terminated, stop the timer and remove the bus
+                Collection<Timer> timers = timerService.getTimers();
+                for (Timer t : timers) {
+                    //look for the server timer
+                    if (("s" + bus.getId() + "s" + si.getId()).equals(t.getInfo())) {
+                        System.out.println("timer found!");
+                        t.cancel();
+                        break;
+                    }
+                }
+                User user = em.find(User.class, si.getUserId());
+                user.setBus(null);
+                em.remove(bus);
+                em.flush();
+            }
+        }
+        if (routeNo > 0 && busStopsAt == 0) {
+            // bus is travelling, calculate all dwell time
+            System.out.println("bus travels: update location");
+            int totalDwell = 0;
+            int totalDistance = 0;
+            int travelTime = 0;
+            for (int j = 0; j < routeNo; j++) {
+                totalDwell += si.getDwells().get(j);
+            }
+            for (int k = 0; k < (routeNo - 1); k++) {
+                totalDistance += routeList.get(k).getDistance();
+                travelTime += routeList.get(k).getDistance() / si.getSpeeds().get(k);
+            }
+            int distanceOnCurrentRoute = (current - totalDwell - travelTime) * si.getSpeeds().get(routeNo - 1);
+//            bus.setDistanceFromPreviousStop((double)distanceOnCurrentRoute);
+//            bus.setDistanceToNextStop(bus.getDistanceToNextStop()-(double)distanceOnCurrentRoute);
+//            bus.setLastUpdateTime(new Timestamp(now.getTime()));
+//            Route route = routeList.get(routeNo-1);
+//            BusStop start = em.find(BusStop.class, route.getStartStopId());
+//            BusStop end = em.find(BusStop.class, route.getEndStopId());
+//            bus.setPreviousStop(start);
+//            bus.setNextStop(end);
+//            bus.setSpeed((double)si.getSpeeds().get(routeNo-1));
+//            em.merge(bus);
+            totalDistance += distanceOnCurrentRoute;
+            long locationId = totalDistance / 10;
+            if (locationId == 0) {
+                locationId = 1;
+            }
+            Query q2 = em.createQuery("SELECT l FROM Location l WHERE l.id=:id");
+            q2.setParameter("id", locationId);
+            Location l = (Location) q2.getSingleResult();
+            dmsbl.updateRecord(si.getUserId(), l.getLatitude(), l.getLongitude(), (double) si.getSpeeds().get(routeNo - 1));
+
+        } else if (routeNo == 0 && busStopsAt > 0) {
+            // bus is stops at bus stop
+            System.out.println("bus stops: update location");
+//            Query query = em.createQuery("SELECT b FROM BusStop b WHERE b.busStopNo=:number");
+//            query.setParameter("number", busStopsAt);
+            BusStop busStop = this.getBusStop((new Integer(busStopsAt)).toString());
+            dmsbl.updateRecord(si.getUserId(), busStop.getLatitude(), busStop.getLongitude(), 0.0);
+        }
+
+        si.setCount(si.getCount() + 1);
+        em.merge(si);
+    }
+
 }

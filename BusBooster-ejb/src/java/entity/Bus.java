@@ -7,6 +7,7 @@ package entity;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
@@ -27,7 +28,6 @@ public class Bus implements Serializable {
     private Long id;
     
     private String busNo;
-    private String plateNo;//no use currently
     private String direction;
     private Double longitude;
     private Double latitude;
@@ -46,20 +46,19 @@ public class Bus implements Serializable {
     private Double previousRouteTravelTime;
     
     @OneToMany
-    private List<User> userList;
+    private List<User> userList = new ArrayList();
     
     private Integer numberOfUserOnboard;
     
     public Bus(){}
     
-    public Bus(String busNo, String direction, Double longitude, Double latitude, BusStop previousStop, BusStop nextStop){
+    public Bus(String busNo, String direction, Double latitude, Double longitude, BusStop previousStop, BusStop nextStop){
         this.setBusNo(busNo);
         this.setDirection(direction);
         this.setLongitude(longitude);
         this.setLatitude(latitude);
         Date now = new Date();
         this.setLastUpdateTime(new Timestamp(now.getTime()));
-        this.setTimeLeftLastStop(lastUpdateTime);
         this.setPreviousStop(previousStop);
         this.setNextStop(nextStop);
         this.setSpeed(0.0);
@@ -111,20 +110,6 @@ public class Bus implements Serializable {
      */
     public void setBusNo(String busNo) {
         this.busNo = busNo;
-    }
-
-    /**
-     * @return the plateNo
-     */
-    public String getPlateNo() {
-        return plateNo;
-    }
-
-    /**
-     * @param plateNo the plateNo to set
-     */
-    public void setPlateNo(String plateNo) {
-        this.plateNo = plateNo;
     }
 
     /**

@@ -27,7 +27,7 @@ public class BusManagementSessionBean implements BusManagementSessionBeanLocal {
     private EntityManager em;
     
     @Override
-    public Bus register(String busNo, String direction, Double longitude, Double latitude, Timestamp lastUpdateTime, BusStop previousBusStop) {
+    public Bus register(String busNo, String direction, Double latitude, Double longitude, Timestamp lastUpdateTime, BusStop previousBusStop) {
         Query query = em.createQuery("SELECT b FROM BusRoute b WHERE b.busNo=:no AND b.direction=:dir");
         query.setParameter("no", busNo);
         query.setParameter("dir", direction);
@@ -35,7 +35,7 @@ public class BusManagementSessionBean implements BusManagementSessionBeanLocal {
         int i = busRoute.getBusStopList().indexOf(previousBusStop);
         BusStop nextBusStop = busRoute.getBusStopList().get(i);
         try {
-            Bus bus = new Bus(busNo, direction, longitude, latitude, previousBusStop, nextBusStop);
+            Bus bus = new Bus(busNo, direction, latitude, longitude, previousBusStop, nextBusStop);
             Query q = em.createQuery("SELECT r FROM Route r WHERE r.startStop=:start AND r.endStop=:end");
             q.setParameter("start", previousBusStop);
             q.setParameter("end", nextBusStop);

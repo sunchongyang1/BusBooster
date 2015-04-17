@@ -39,13 +39,14 @@ public class ServerManagementSessionBean implements ServerManagementSessionBeanL
     PredictionManagementSessionBeanLocal pmsbl;
 
     @Override
-    public void startServer() {
+    public Boolean startServer() {
         //start in 10 sec and timeout every 10 seconds
         Timer timer = timerService.createTimer(10000, 10000, "ServerTimer");
+        return true;
     }
 
     @Override
-    public void stopServer() {
+    public Boolean stopServer() {
         Collection<Timer> timers = timerService.getTimers();
         for (Timer timer : timers) {
             //look for the server timer
@@ -54,6 +55,7 @@ public class ServerManagementSessionBean implements ServerManagementSessionBeanL
                 break;
             }
         }
+        return true;
     }
 
     //called every 10 seconds
@@ -63,24 +65,17 @@ public class ServerManagementSessionBean implements ServerManagementSessionBeanL
         List<BusData> busDataList = new ArrayList(q.getResultList());
         if (busDataList.isEmpty()) {
             System.out.println("No data received by server!");
-            return;
         } else {
-            // do something such as update bus arrival time update busdata record
             List<BusData> temp = new ArrayList();
             int i;
             int j;
-            boolean newBus = false;
             for (i = 0; i < busDataList.size(); i++) {
                 temp.clear();
-                if (busDataList.get(i).getArchived()) {
-                    // if archived, continue
-                    continue;
-                } else if (!busDataList.get(i).getNewBus()) {
-                    // existing bus and the user already on board
+                if (!busDataList.get(i).getArchived()) {
                     temp.add(busDataList.get(i));
 
                     for (j = i + 1; j < busDataList.size(); j++) {
-                        if (!busDataList.get(j).getArchived() && busDataList.get(j).getBusNo().equals(busDataList.get(i).getBusNo())
+                        if (!busDataList.get(j).getArchived() && busDataList.get(j).getBusId().equals(busDataList.get(i).getBusId())
                                 && this.calculateDistance(busDataList.get(j).getLatitude(), busDataList.get(j).getLongitude(),
                                         busDataList.get(i).getLatitude(), busDataList.get(i).getLongitude()) <= 10.0) {
                             temp.add(busDataList.get(j));

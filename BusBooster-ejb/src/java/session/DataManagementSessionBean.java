@@ -87,7 +87,7 @@ public class DataManagementSessionBean implements DataManagementSessionBeanLocal
     }
 
     @Override
-    public BusData updateRecord(Long userId, Double longitude, Double latitude, Double speed) {
+    public BusData updateRecord(Long userId, Double latitude, Double longitude, Double speed) {
         //find user first
         User user = em.find(User.class, userId);
         Bus bus = user.getBus();
@@ -96,43 +96,19 @@ public class DataManagementSessionBean implements DataManagementSessionBeanLocal
         Date now = new Date();
         Timestamp time = new Timestamp(now.getTime());//get current time
         
-        BusData busData = new BusData(bus.getId(), bus.getBusNo(), bus.getDirection(), longitude, latitude, speed, time);
+        BusData busData = new BusData(bus.getId(), bus.getBusNo(), bus.getDirection(), latitude, longitude, speed, time);
         
         em.persist(busData);
         
         return busData;
-        
-//        // if new bus then register bus first. do not wait for server to process the request.
-//        if (busId == null) {
-//            if (checkIfNewUser(busNo, latitude, longitude) != null) {
-//                // new user on registered bus, find the bus id and return
-//                BusData busData = new BusData(busId, busNo, direction, longitude, latitude, speed, time);
-//                em.persist(busData);
-//                return busData;
-//            } else {
-//                // new user on unregistered bus, register new bus and return
-//                // find the location of user, at one of the bus stops
-//                BusStop busStop = this.findBusStop(latitude, longitude);
-//                Bus bus = bmsbl.register(busNo, direction, longitude, latitude, time, busStop);
-//                
-//                BusData busData = new BusData(bus.getId(), busNo, direction, longitude, latitude, speed, time);
-//                em.persist(busData);
-//                return busData;
-//            }
-//        } else {
-//            BusData busData = new BusData(busId, busNo, direction, longitude, latitude, speed, time);
-//            em.persist(busData);
-//            return busData;
-//        }
-
     }
     
     @Override
     public Boolean archiveData(List<BusData> busDataList) {
         for (BusData b : busDataList) {
             b.setArchived(Boolean.TRUE);
+            em.merge(b);
         }
-        em.persist(busDataList);
         return true;
     }
     

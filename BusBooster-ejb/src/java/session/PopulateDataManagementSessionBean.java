@@ -10,6 +10,7 @@ import entity.BusRoute;
 import entity.BusStop;
 import entity.DepartureTime;
 import entity.Route;
+import entity.User;
 import java.sql.Timestamp;
 import java.util.Date;
 import javax.ejb.Stateless;
@@ -57,6 +58,8 @@ public class PopulateDataManagementSessionBean implements PopulateDataManagement
     @Override
     public void populateBusStop() {
         if (this.isBusStopEmpty()) {
+            User user = new User("testUser");
+            em.persist(user);
             // populate bus stop data
             BusStop b1 = this.createNewBusStop("PGP Start", "1", 1.291849, 103.780467, 600.0, null, Boolean.FALSE);
             System.out.println("b1 populated " + b1);
@@ -166,8 +169,8 @@ public class PopulateDataManagementSessionBean implements PopulateDataManagement
                     this.createHistory(b13, Long.valueOf(0), new Timestamp(now.getTime() - 6 * tenMinutes + 806 * 1000), 10);
                     this.createHistory(b14, Long.valueOf(0), new Timestamp(now.getTime() - 6 * tenMinutes + 847 * 1000), 10);
                     this.createHistory(b15, Long.valueOf(0), new Timestamp(now.getTime() - 6 * tenMinutes + 857 * 1000), 0);
-                    this.createHistory(b16, Long.valueOf(0), new Timestamp(now.getTime() - 6 * tenMinutes), 0);
-                    
+                    this.createHistory(b16, Long.valueOf(0), new Timestamp(now.getTime() - 6 * tenMinutes + 892 * 1000), 0);
+
                     this.createHistory(b1, Long.valueOf(1), new Timestamp(now.getTime() - 5 * tenMinutes), 0);
                     this.createHistory(b2, Long.valueOf(1), new Timestamp(now.getTime() - 5 * tenMinutes + 60 * 1000), 0);
                     this.createHistory(b3, Long.valueOf(1), new Timestamp(now.getTime() - 5 * tenMinutes + 119 * 1000), 30);
@@ -177,14 +180,14 @@ public class PopulateDataManagementSessionBean implements PopulateDataManagement
                     this.createHistory(b7, Long.valueOf(1), new Timestamp(now.getTime() - 5 * tenMinutes + 275 * 1000), 10);
                     this.createHistory(b8, Long.valueOf(1), new Timestamp(now.getTime() - 5 * tenMinutes + 331 * 1000), 20);
                     this.createHistory(b9, Long.valueOf(1), new Timestamp(now.getTime() - 5 * tenMinutes + 414 * 1000), 40);
-                    this.createHistory(b10, Long.valueOf(1), new Timestamp(now.getTime() -5 * tenMinutes + 459 * 1000), 10);
-                    this.createHistory(b11, Long.valueOf(1), new Timestamp(now.getTime() -5 * tenMinutes + 483 * 1000), 0);
-                    this.createHistory(b12, Long.valueOf(1), new Timestamp(now.getTime() -5 * tenMinutes + 547 * 1000), 20);
-                    this.createHistory(b13, Long.valueOf(1), new Timestamp(now.getTime() -5 * tenMinutes + 632 * 1000), 10);
-                    this.createHistory(b14, Long.valueOf(1), new Timestamp(now.getTime() -5 * tenMinutes + 692 * 1000), 10);
-                    this.createHistory(b15, Long.valueOf(1), new Timestamp(now.getTime() -5 * tenMinutes + 702 * 1000), 0);
-                    this.createHistory(b16, Long.valueOf(1), new Timestamp(now.getTime() -5 * tenMinutes), 0);
-                    
+                    this.createHistory(b10, Long.valueOf(1), new Timestamp(now.getTime() - 5 * tenMinutes + 459 * 1000), 10);
+                    this.createHistory(b11, Long.valueOf(1), new Timestamp(now.getTime() - 5 * tenMinutes + 483 * 1000), 0);
+                    this.createHistory(b12, Long.valueOf(1), new Timestamp(now.getTime() - 5 * tenMinutes + 547 * 1000), 20);
+                    this.createHistory(b13, Long.valueOf(1), new Timestamp(now.getTime() - 5 * tenMinutes + 632 * 1000), 10);
+                    this.createHistory(b14, Long.valueOf(1), new Timestamp(now.getTime() - 5 * tenMinutes + 692 * 1000), 10);
+                    this.createHistory(b15, Long.valueOf(1), new Timestamp(now.getTime() - 5 * tenMinutes + 702 * 1000), 0);
+                    this.createHistory(b16, Long.valueOf(1), new Timestamp(now.getTime() - 5 * tenMinutes + 737 * 1000), 0);
+
                     this.createHistory(b1, Long.valueOf(2), new Timestamp(now.getTime() - 4 * tenMinutes), 0);
                     this.createHistory(b2, Long.valueOf(2), new Timestamp(now.getTime() - 4 * tenMinutes + 55 * 1000), 0);
                     this.createHistory(b3, Long.valueOf(2), new Timestamp(now.getTime() - 4 * tenMinutes + 101 * 1000), 20);
@@ -194,14 +197,14 @@ public class PopulateDataManagementSessionBean implements PopulateDataManagement
                     this.createHistory(b7, Long.valueOf(2), new Timestamp(now.getTime() - 4 * tenMinutes + 274 * 1000), 10);
                     this.createHistory(b8, Long.valueOf(2), new Timestamp(now.getTime() - 4 * tenMinutes + 314 * 1000), 10);
                     this.createHistory(b9, Long.valueOf(2), new Timestamp(now.getTime() - 4 * tenMinutes + 413 * 1000), 60);
-                    this.createHistory(b10, Long.valueOf(2), new Timestamp(now.getTime() -4 * tenMinutes + 455 * 1000), 10);
-                    this.createHistory(b11, Long.valueOf(2), new Timestamp(now.getTime() -4 * tenMinutes + 476 * 1000), 0);
-                    this.createHistory(b12, Long.valueOf(2), new Timestamp(now.getTime() -4 * tenMinutes + 545 * 1000), 30);
-                    this.createHistory(b13, Long.valueOf(2), new Timestamp(now.getTime() -4 * tenMinutes + 623 * 1000), 10);
-                    this.createHistory(b14, Long.valueOf(2), new Timestamp(now.getTime() -4 * tenMinutes + 675 * 1000), 10);
-                    this.createHistory(b15, Long.valueOf(2), new Timestamp(now.getTime() -4 * tenMinutes + 684 * 1000), 0);
-                    this.createHistory(b16, Long.valueOf(2), new Timestamp(now.getTime() -4 * tenMinutes), 0);
-                    
+                    this.createHistory(b10, Long.valueOf(2), new Timestamp(now.getTime() - 4 * tenMinutes + 455 * 1000), 10);
+                    this.createHistory(b11, Long.valueOf(2), new Timestamp(now.getTime() - 4 * tenMinutes + 476 * 1000), 0);
+                    this.createHistory(b12, Long.valueOf(2), new Timestamp(now.getTime() - 4 * tenMinutes + 545 * 1000), 30);
+                    this.createHistory(b13, Long.valueOf(2), new Timestamp(now.getTime() - 4 * tenMinutes + 623 * 1000), 10);
+                    this.createHistory(b14, Long.valueOf(2), new Timestamp(now.getTime() - 4 * tenMinutes + 675 * 1000), 10);
+                    this.createHistory(b15, Long.valueOf(2), new Timestamp(now.getTime() - 4 * tenMinutes + 684 * 1000), 0);
+                    this.createHistory(b16, Long.valueOf(2), new Timestamp(now.getTime() - 4 * tenMinutes + 719 * 1000), 0);
+
                     this.createHistory(b1, Long.valueOf(3), new Timestamp(now.getTime() - 3 * tenMinutes), 0);
                     this.createHistory(b2, Long.valueOf(3), new Timestamp(now.getTime() - 3 * tenMinutes + 46 * 1000), 0);
                     this.createHistory(b3, Long.valueOf(3), new Timestamp(now.getTime() - 3 * tenMinutes + 118 * 1000), 50);
@@ -211,14 +214,14 @@ public class PopulateDataManagementSessionBean implements PopulateDataManagement
                     this.createHistory(b7, Long.valueOf(3), new Timestamp(now.getTime() - 3 * tenMinutes + 273 * 1000), 10);
                     this.createHistory(b8, Long.valueOf(3), new Timestamp(now.getTime() - 3 * tenMinutes + 305 * 1000), 10);
                     this.createHistory(b9, Long.valueOf(3), new Timestamp(now.getTime() - 3 * tenMinutes + 397 * 1000), 60);
-                    this.createHistory(b10, Long.valueOf(3), new Timestamp(now.getTime() -3 * tenMinutes + 434 * 1000), 10);
-                    this.createHistory(b11, Long.valueOf(3), new Timestamp(now.getTime() -3 * tenMinutes + 452 * 1000), 0);
-                    this.createHistory(b12, Long.valueOf(3), new Timestamp(now.getTime() -3 * tenMinutes + 514 * 1000), 30);
-                    this.createHistory(b13, Long.valueOf(3), new Timestamp(now.getTime() -3 * tenMinutes + 582 * 1000), 10);
-                    this.createHistory(b14, Long.valueOf(3), new Timestamp(now.getTime() -3 * tenMinutes + 623 * 1000), 10);
-                    this.createHistory(b15, Long.valueOf(3), new Timestamp(now.getTime() -3 * tenMinutes + 631 * 1000), 0);
-                    this.createHistory(b16, Long.valueOf(3), new Timestamp(now.getTime() -3 * tenMinutes), 0);
-                    
+                    this.createHistory(b10, Long.valueOf(3), new Timestamp(now.getTime() - 3 * tenMinutes + 434 * 1000), 10);
+                    this.createHistory(b11, Long.valueOf(3), new Timestamp(now.getTime() - 3 * tenMinutes + 452 * 1000), 0);
+                    this.createHistory(b12, Long.valueOf(3), new Timestamp(now.getTime() - 3 * tenMinutes + 514 * 1000), 30);
+                    this.createHistory(b13, Long.valueOf(3), new Timestamp(now.getTime() - 3 * tenMinutes + 582 * 1000), 10);
+                    this.createHistory(b14, Long.valueOf(3), new Timestamp(now.getTime() - 3 * tenMinutes + 623 * 1000), 10);
+                    this.createHistory(b15, Long.valueOf(3), new Timestamp(now.getTime() - 3 * tenMinutes + 631 * 1000), 0);
+                    this.createHistory(b16, Long.valueOf(3), new Timestamp(now.getTime() - 3 * tenMinutes + 666 * 1000), 0);
+
                     this.createHistory(b1, Long.valueOf(4), new Timestamp(now.getTime() - 2 * tenMinutes), 0);
                     this.createHistory(b2, Long.valueOf(4), new Timestamp(now.getTime() - 2 * tenMinutes + 50 * 1000), 0);
                     this.createHistory(b3, Long.valueOf(4), new Timestamp(now.getTime() - 2 * tenMinutes + 124 * 1000), 50);
@@ -228,14 +231,14 @@ public class PopulateDataManagementSessionBean implements PopulateDataManagement
                     this.createHistory(b7, Long.valueOf(4), new Timestamp(now.getTime() - 2 * tenMinutes + 287 * 1000), 10);
                     this.createHistory(b8, Long.valueOf(4), new Timestamp(now.getTime() - 2 * tenMinutes + 323 * 1000), 10);
                     this.createHistory(b9, Long.valueOf(4), new Timestamp(now.getTime() - 2 * tenMinutes + 418 * 1000), 60);
-                    this.createHistory(b10, Long.valueOf(4), new Timestamp(now.getTime() -2 * tenMinutes + 457 * 1000), 10);
-                    this.createHistory(b11, Long.valueOf(4), new Timestamp(now.getTime() -2 * tenMinutes + 477 * 1000), 0);
-                    this.createHistory(b12, Long.valueOf(4), new Timestamp(now.getTime() -2 * tenMinutes + 542 * 1000), 30);
-                    this.createHistory(b13, Long.valueOf(4), new Timestamp(now.getTime() -2 * tenMinutes + 614 * 1000), 10);
-                    this.createHistory(b14, Long.valueOf(4), new Timestamp(now.getTime() -2 * tenMinutes + 660 * 1000), 10);
-                    this.createHistory(b15, Long.valueOf(4), new Timestamp(now.getTime() -2 * tenMinutes + 670 * 1000), 0);
-                    this.createHistory(b16, Long.valueOf(4), new Timestamp(now.getTime() -2 * tenMinutes), 0);
-                    
+                    this.createHistory(b10, Long.valueOf(4), new Timestamp(now.getTime() - 2 * tenMinutes + 457 * 1000), 10);
+                    this.createHistory(b11, Long.valueOf(4), new Timestamp(now.getTime() - 2 * tenMinutes + 477 * 1000), 0);
+                    this.createHistory(b12, Long.valueOf(4), new Timestamp(now.getTime() - 2 * tenMinutes + 542 * 1000), 30);
+                    this.createHistory(b13, Long.valueOf(4), new Timestamp(now.getTime() - 2 * tenMinutes + 614 * 1000), 10);
+                    this.createHistory(b14, Long.valueOf(4), new Timestamp(now.getTime() - 2 * tenMinutes + 660 * 1000), 10);
+                    this.createHistory(b15, Long.valueOf(4), new Timestamp(now.getTime() - 2 * tenMinutes + 670 * 1000), 0);
+                    this.createHistory(b16, Long.valueOf(4), new Timestamp(now.getTime() - 2 * tenMinutes + 703 * 1000), 0);
+
                     this.createHistory(b1, Long.valueOf(5), new Timestamp(now.getTime() - 1 * tenMinutes), 0);
                     this.createHistory(b2, Long.valueOf(5), new Timestamp(now.getTime() - 1 * tenMinutes + 55 * 1000), 0);
                     this.createHistory(b3, Long.valueOf(5), new Timestamp(now.getTime() - 1 * tenMinutes + 131 * 1000), 20);
@@ -245,14 +248,14 @@ public class PopulateDataManagementSessionBean implements PopulateDataManagement
                     this.createHistory(b7, Long.valueOf(5), new Timestamp(now.getTime() - 1 * tenMinutes + 304 * 1000), 10);
                     this.createHistory(b8, Long.valueOf(5), new Timestamp(now.getTime() - 1 * tenMinutes + 344 * 1000), 10);
                     this.createHistory(b9, Long.valueOf(5), new Timestamp(now.getTime() - 1 * tenMinutes + 443 * 1000), 60);
-                    this.createHistory(b10, Long.valueOf(5), new Timestamp(now.getTime() -1 * tenMinutes + 485 * 1000), 10);
-                    this.createHistory(b11, Long.valueOf(5), new Timestamp(now.getTime() -1 * tenMinutes + 506 * 1000), 0);
-                    this.createHistory(b12, Long.valueOf(5), new Timestamp(now.getTime() -1 * tenMinutes + 575 * 1000), 30);
-                    this.createHistory(b13, Long.valueOf(5), new Timestamp(now.getTime() -1 * tenMinutes + 654 * 1000), 10);
-                    this.createHistory(b14, Long.valueOf(5), new Timestamp(now.getTime() -1 * tenMinutes + 705 * 1000), 10);
-                    this.createHistory(b15, Long.valueOf(5), new Timestamp(now.getTime() -1 * tenMinutes + 714 * 1000), 0);
-                    this.createHistory(b16, Long.valueOf(5), new Timestamp(now.getTime() -1 * tenMinutes), 0);
-                    
+                    this.createHistory(b10, Long.valueOf(5), new Timestamp(now.getTime() - 1 * tenMinutes + 485 * 1000), 10);
+                    this.createHistory(b11, Long.valueOf(5), new Timestamp(now.getTime() - 1 * tenMinutes + 506 * 1000), 0);
+                    this.createHistory(b12, Long.valueOf(5), new Timestamp(now.getTime() - 1 * tenMinutes + 575 * 1000), 30);
+                    this.createHistory(b13, Long.valueOf(5), new Timestamp(now.getTime() - 1 * tenMinutes + 654 * 1000), 10);
+                    this.createHistory(b14, Long.valueOf(5), new Timestamp(now.getTime() - 1 * tenMinutes + 705 * 1000), 10);
+                    this.createHistory(b15, Long.valueOf(5), new Timestamp(now.getTime() - 1 * tenMinutes + 714 * 1000), 0);
+                    this.createHistory(b16, Long.valueOf(5), new Timestamp(now.getTime() - 1 * tenMinutes + 749 * 1000), 0);
+
                     System.out.println("Populate historical data finished!");
                 }
             }
@@ -284,14 +287,14 @@ public class PopulateDataManagementSessionBean implements PopulateDataManagement
         return busRoute;
     }
 
-    private void createHistory(BusStop busStop, Long busId, Timestamp arrivalTime, Integer dwell) {
-        ArrivalTime arrival = new ArrivalTime(busStop, busId, busStop.getArrivalSequence(), arrivalTime);
+    private void createHistory(BusStop busStop, Long busId, Timestamp departureTime, Integer dwell) {
+        ArrivalTime arrival = new ArrivalTime(busStop, busId, busStop.getArrivalSequence(), new Timestamp(departureTime.getTime() - dwell * 1000));
         em.persist(arrival);
         busStop.getArrivalTimeList().add(arrival);
         busStop.setArrivalSequence(busStop.getArrivalSequence() + 1);
-        
+
         if (!busStop.getTerminal()) {
-            Timestamp departureTime = new Timestamp(arrivalTime.getTime() + dwell * 1000);
+//            Timestamp departureTime = new Timestamp(arrivalTime.getTime() + dwell * 1000);
             DepartureTime departure = new DepartureTime(busStop, busId, busStop.getDepartureSequence(), departureTime);
             em.persist(departure);
             busStop.getDepartureTimeList().add(departure);

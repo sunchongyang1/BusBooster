@@ -32,13 +32,11 @@ public class BusData implements Serializable {
     private Double speed;
     private Timestamp time;
     
-    private Boolean newBus;
-    private Boolean newUser;
     private Boolean archived;
     
     public BusData(){}
     
-    public BusData(Long busId, String busNo, String direction, Double longitude, Double latitude, Double speed, Timestamp time){
+    public BusData(Long busId, String busNo, String direction, Double latitude, Double longitude, Double speed, Timestamp time){
         this.setBusId(busId);
         this.setBusNo(busNo);
         this.setDirection(direction);
@@ -165,34 +163,6 @@ public class BusData implements Serializable {
      */
     public void setBusId(Long busId) {
         this.busId = busId;
-    }
-
-    /**
-     * @return the newBus
-     */
-    public Boolean getNewBus() {
-        return newBus;
-    }
-
-    /**
-     * @param newBus the newBus to set
-     */
-    public void setNewBus(Boolean newBus) {
-        this.newBus = newBus;
-    }
-
-    /**
-     * @return the newUser
-     */
-    public Boolean getNewUser() {
-        return newUser;
-    }
-
-    /**
-     * @param newUser the newUser to set
-     */
-    public void setNewUser(Boolean newUser) {
-        this.newUser = newUser;
     }
 
     /**

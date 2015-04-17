@@ -17,7 +17,7 @@ import javax.ejb.Local;
  */
 @Local
 public interface BusManagementSessionBeanLocal {
-    public Bus register(String busNo, String direction, Double longitude, Double latitude, Timestamp lastUpdateTime, BusStop previousBusStop);
+    public Bus register(String busNo, String direction, Double latitude, Double longitude, Timestamp lastUpdateTime, BusStop previousBusStop);
     //following method no use currently
     public Boolean update(Long busId, String busNo, String direction, Double longitude, Double latitude, Double speed, Timestamp lastUpdateTime);
     public Boolean remove(Long busId);

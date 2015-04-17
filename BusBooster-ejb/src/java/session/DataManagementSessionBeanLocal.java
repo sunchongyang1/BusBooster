@@ -20,7 +20,7 @@ import javax.ejb.Local;
 @Local
 public interface DataManagementSessionBeanLocal {
     public User getBusNumberAndDirection(String busNo, String direction, String busStopNumber); // no existing bus - create. bus exists - attach user to bus. create new user currently.
-    public BusData updateRecord(Long userId, Double Longitude, Double Latitude, Double speed);
+    public BusData updateRecord(Long userId, Double latitude, Double longitude, Double speed);
     public Boolean archiveData(List<BusData> busDataList);
 //    public List<BusStop> getBusStopList(Double latitude, Double longitude);
     

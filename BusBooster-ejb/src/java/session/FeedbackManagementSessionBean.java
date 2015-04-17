@@ -42,7 +42,7 @@ public class FeedbackManagementSessionBean implements FeedbackManagementSessionB
         q.setParameter("id", busId);
         List<Feedback> feedbackList = new ArrayList(q.getResultList());
         if(feedbackList.isEmpty()) {
-            System.out.println("Bus delay: N.A.");
+//            System.out.println("Bus delay: N.A.");
             return 0;
         } else {
             int sum = 0;
@@ -59,7 +59,7 @@ public class FeedbackManagementSessionBean implements FeedbackManagementSessionB
         q.setParameter("id", busId);
         List<Feedback> feedbackList = new ArrayList(q.getResultList());
         if(feedbackList.isEmpty()) {
-            System.out.println("Bus condition: normal.");
+//            System.out.println("Bus condition: normal.");
             return Boolean.FALSE;
         } else {
             for(Feedback f: feedbackList) {

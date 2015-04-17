@@ -13,6 +13,6 @@ import javax.ejb.Local;
  */
 @Local
 public interface ServerManagementSessionBeanLocal {
-    public void startServer();
-    public void stopServer();
+    public Boolean startServer();
+    public Boolean stopServer();
 }
