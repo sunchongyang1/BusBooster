@@ -13,15 +13,23 @@
         <script src="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script>
         <script type="text/javascript" src="resources/js/jquery.ui.map.full.min.js"></script>
         <script type="text/javascript">
+            if (typeof (Storage) !== "undefined") {
+                    // Store
+                    var lat = localStorage.getItem("lat");
+                    var lon = localStorage.getItem("lon");
+                    
+                } else {
+                    alert("web browser does not support local storage!");
+                }
             var N = 5000; //every 5 second
             // var clearmarkers = function() {$('#map_canvas').gmap('clearMarkers')};
-            var currentLocation = new google.maps.LatLng(1.293357, 103.775188);
+            var currentLocation = new google.maps.LatLng(lat, lon);
             var timeout = function () {
                 setTimeout(function () {
                     $('#map_canvas').gmap({'zoom': 15, 'center': currentLocation});
                     $('#map_canvas').gmap('clear', 'markers');
                     $('#map_canvas').gmap('addMarker', {'position': currentLocation});
-                    $.getJSON('http://localhost:8080/BusBooster-war/webresources/buses', function (data) {
+                    $.getJSON('http://localhost:8080/BusBooster-war/webresources/buses?busStopNo='+localStorage.getItem("currentBusStopNo"), function (data) {
                         $.each(data, function (i, marker) {
                             $('#map_canvas').gmap('addMarker', {
                                 'position': new google.maps.LatLng(marker.latitude, marker.longitude),
@@ -40,7 +48,7 @@
             $("#map").live("pageshow", function () {
                 $('#map_canvas').gmap({'zoom': 15, 'center': currentLocation});
                 $('#map_canvas').gmap().bind('init', function () {
-                    $.getJSON('http://localhost:8080/BusBooster-war/webresources/buses', function (data) {
+                    $.getJSON('http://localhost:8080/BusBooster-war/webresources/buses?busStopNo='+localStorage.getItem("currentBusStopNo"), function (data) {
                         $.each(data, function (i, marker) {
                             $('#map_canvas').gmap('addMarker', {
                                 'position': new google.maps.LatLng(marker.latitude, marker.longitude),
@@ -60,7 +68,16 @@
                     // 'bounds': true,
                 });
             });
-
+            
+            $(function () {
+                $("#myride").click(function () {
+                    if(localStorage.getItem("onboard") === "Y") {
+                        window.location.href = "myride_onboard.html?busNo="+localStorage.getItem("busNo")+"&busStopNo="+localStorage.getItem("currentBusStopNo")+"&direction="+localStorage.getItem("direction");
+                    } else {
+                        window.location.href = "myride.html";
+                    }
+                });
+            });
         </script>
     </head>
     <body>
@@ -71,7 +88,7 @@
                     <ul>
                         <li><a data-ajax="false" href="index.html" data-icon="location-arrow">Near Me</a></li>
                         <li><a data-ajax="false" href="favorite.html" data-icon="star">Feedback</a></li>
-                        <li><a data-ajax="false" href="myride.html" data-icon="user">My Ride</a></li>
+                        <li><a id="myride" data-ajax="false" href="" data-icon="user">My Ride</a></li>
                         <li><a data-ajax="false" href="map.html" data-icon="map-marker" class="ui-btn-active">Map</a></li>
                         <li><a data-ajax="false" href="settings.html" data-icon="gear">Settings</a></li>
                     </ul>

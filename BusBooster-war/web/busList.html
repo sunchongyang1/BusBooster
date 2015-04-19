@@ -44,6 +44,8 @@
                         var prediction;
                         if(item.arrivalTime<0) {
                             prediction="No Bus Available";
+                        } else if(item.arrivalTime===0) {
+                            prediction="Bus Arrived!";
                         } else {
                             prediction=item.arrivalTime+" seconds";
                         }
@@ -60,7 +62,7 @@
                     <div class="ui-grid-a">\n\
                         <div class="ui-block-a">\n\
                             <p>Direction: ' + item.direction + '</p>\n\
-                            <h4>Possible delay by user feedback: '+item.delay+' seconds</h4>\n\
+                            <h4>Possible delay by user feedback: '+item.delay+' mins</h4>\n\
                             <h4>Is Bus Break Down? '+breakdown+'</h4>\n\
                         </div>\n\
                         <div id="prediction" class="ui-block-b">\n\
@@ -71,6 +73,16 @@
                 </div>\n\
                 <hr />')
                     })
+                });
+                $("#refresh").click(function(){
+                    location.reload();
+                });
+                $("#myride").click(function () {
+                    if(localStorage.getItem("onboard") === "Y") {
+                        window.location.href = "myride_onboard.html?busNo="+localStorage.getItem("busNo")+"&busStopNo="+localStorage.getItem("currentBusStopNo")+"&direction="+localStorage.getItem("direction");
+                    } else {
+                        window.location.href = "myride.html";
+                    }
                 });
             });
         </script>
@@ -83,7 +95,7 @@
                     <ul>
                         <li><a data-ajax="false" href="index.html" data-icon="location-arrow" class="ui-btn-active">Near Me</a></li>
                         <li><a data-ajax="false" href="favorite.html" data-icon="star">Feedback</a></li>
-                        <li><a data-ajax="false" href="myride.html" data-icon="user">My Ride</a></li>
+                        <li><a id="myride" data-ajax="false" href="" data-icon="user">My Ride</a></li>
                         <li><a data-ajax="false" href="map.html" data-icon="map-marker">Map</a></li>
                         <li><a data-ajax="false" href="settings.html" data-icon="gear">Settings</a></li>
                     </ul>
@@ -92,6 +104,7 @@
             <div id="busRouteList" data-role="content" data-theme="a">
 
                 <a data-ajax="false" href="index.html" data-role="button" data-icon="arrow-left">Back</a>
+                <button id="refresh" data-icon="star" data-role="button">Refresh</button>
 
                 <h2 id="stopname"></h2>
                 <hr />

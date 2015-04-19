@@ -66,13 +66,12 @@ public class GetBusStopListResource {
      */
     @GET
     @Produces("application/json")
-    public List<BusRouteSimple> getBusRouteByStop(@QueryParam("busStopId") @DefaultValue("1") String busStopNo) {
+    public List<BusRouteSimple> getBusRouteByStop(@QueryParam("busStopNo") String busStopNo) {
         System.out.println("inside get bus route by stop");
         List<BusRoute> busRouteList = pmsbl.getBusRouteByBusStop(busStopNo);
         List<BusRouteSimple> result = new ArrayList();
 //        System.out.println(busRouteList);
         for(BusRoute b: busRouteList) {
-            
             
             BusRouteSimple temp = new BusRouteSimple(b.getId(), b.getBusNo(), b.getDirection());
             
@@ -80,18 +79,23 @@ public class GetBusStopListResource {
                 temp.getBusStopIdList().add(a.getId());
             }
             
-            
             //
-            Bus bus = pmsbl.getNearestBus(busStopNo, busStopNo);
+            Bus bus = pmsbl.getNearestBus(busStopNo, b.getBusNo());
             if(bus == null) {
-                System.out.println("no bus available");
+                System.out.println("resources: no bus available");
                 temp.setArrivalTime(-1);
                 temp.setNumberOfUserOnboard(0);
                 temp.setDelay(0);
                 temp.setBusBreakDown(Boolean.FALSE);
+            } else if (bus.getAtStop() && bus.getPreviousStop().equals(busStopNo)) {
+                System.out.println("resources: Bus arrived at station");
+                temp.setArrivalTime(0);
+                temp.setNumberOfUserOnboard(bus.getNumberOfUserOnboard());
+                temp.setDelay(0);
+                temp.setBusBreakDown(Boolean.FALSE);
             } else {
-                System.out.println("bus found!");
-                temp.setArrivalTime(pmsbl.getArrivalTime(busStopNo, busStopNo).intValue());
+                System.out.println("resource: bus found!");
+                temp.setArrivalTime(pmsbl.getArrivalTime(busStopNo, bus).intValue());
                 temp.setNumberOfUserOnboard(bus.getNumberOfUserOnboard());
                 temp.setDelay(fmsbl.getDelayFromFeedback(bus.getId()));
                 temp.setBusBreakDown(fmsbl.isBusBreakDown(bus.getId()));

@@ -49,6 +49,7 @@ public class Bus implements Serializable {
     private List<User> userList = new ArrayList();
     
     private Integer numberOfUserOnboard;
+    private Boolean atStop;
     
     public Bus(){}
     
@@ -63,6 +64,7 @@ public class Bus implements Serializable {
         this.setNextStop(nextStop);
         this.setSpeed(0.0);
         this.setDistanceFromPreviousStop(0.0);
+        this.setAtStop(Boolean.TRUE);
     }
 
     public Long getId() {
@@ -320,6 +322,20 @@ public class Bus implements Serializable {
      */
     public void setExpectedArrivalTime(Timestamp expectedArrivalTime) {
         this.expectedArrivalTime = expectedArrivalTime;
+    }
+
+    /**
+     * @return the atStop
+     */
+    public Boolean getAtStop() {
+        return atStop;
+    }
+
+    /**
+     * @param atStop the atStop to set
+     */
+    public void setAtStop(Boolean atStop) {
+        this.atStop = atStop;
     }
     
 }

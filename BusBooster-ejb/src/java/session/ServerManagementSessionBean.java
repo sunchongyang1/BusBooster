@@ -40,6 +40,13 @@ public class ServerManagementSessionBean implements ServerManagementSessionBeanL
 
     @Override
     public Boolean startServer() {
+        Collection<Timer> timers = timerService.getTimers();
+        for (Timer timer : timers) {
+            //look for the server timer
+            if ("ServerTimer".equals(timer.getInfo())) {
+                return false;
+            }
+        }
         //start in 10 sec and timeout every 10 seconds
         Timer timer = timerService.createTimer(10000, 10000, "ServerTimer");
         return true;
@@ -64,7 +71,7 @@ public class ServerManagementSessionBean implements ServerManagementSessionBeanL
         Query q = em.createQuery("SELECT b FROM BusData b WHERE b.archived='false'");
         List<BusData> busDataList = new ArrayList(q.getResultList());
         if (busDataList.isEmpty()) {
-            System.out.println("No data received by server!");
+            System.out.println("smsb: No data received by server!");
         } else {
             List<BusData> temp = new ArrayList();
             int i;

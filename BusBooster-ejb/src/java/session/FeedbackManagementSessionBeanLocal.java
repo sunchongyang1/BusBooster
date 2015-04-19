@@ -14,7 +14,7 @@ import javax.ejb.Local;
  */
 @Local
 public interface FeedbackManagementSessionBeanLocal {
-    public Feedback createFeedback(Long userId, Long busId, Boolean busBreakDown, Boolean trafficJam, Integer delay);
+    public Feedback createFeedback(Long userId, Long busId, Boolean busBreakDown, Boolean trafficJam, Integer delay, String comment);
     public Integer getDelayFromFeedback(Long busId);
     public Boolean isBusBreakDown(Long busId);
 }

@@ -28,10 +28,10 @@ public class DataManagementSessionBean implements DataManagementSessionBeanLocal
 
     @PersistenceContext
     private EntityManager em;
-    
+
     @EJB
     BusManagementSessionBeanLocal bmsbl;
-    
+
     @Override
     public User getBusNumberAndDirection(String busNo, String direction, String busStopNumber) {
         // currently user is created automatically, everytime create a new user. only for demonstration.
@@ -48,61 +48,63 @@ public class DataManagementSessionBean implements DataManagementSessionBeanLocal
         q.setParameter("busno", busNo);
         q.setParameter("dir", direction);
         List<Bus> busList = new ArrayList(q.getResultList());
-        if(!busList.isEmpty()) {
+        if (!busList.isEmpty()) {
             // bus exists
             double distance = -1.0;
             double temp;
             Bus bus = new Bus();
-            for(Bus b: busList) { // there might be a situation when two buses are next to each other. then we use the nearer one
+            for (Bus b : busList) { // there might be a situation when two buses are next to each other. then we use the nearer one
                 temp = this.calculateDistance(busStop.getLatitude(), busStop.getLongitude(), b.getLatitude(), b.getLongitude());
-                if(distance < 0.0 && temp < 10.0) {
+                if (distance < 0.0 && temp < 10.0) {
                     distance = temp;
                     bus = b;
-                } else if(distance >= 0.0 && temp < 10.0 && temp < distance) {
+                } else if (distance >= 0.0 && temp < 10.0 && temp < distance) {
                     // bus at bus stop and user board the bus
                     distance = temp;
                     bus = b;
                 }
             }
-            
-            if(distance >= 0.0) {
+            System.out.println("dmsb: bus is " + bus);
+
+            if (distance >= 0.0) {
                 //found the bus
                 newUser.setBus(bus);
                 bus.getUserList().add(newUser);
-                bus.setNumberOfUserOnboard(bus.getUserList().size());
-                
+                bus.setNumberOfUserOnboard(bus.getNumberOfUserOnboard() + 1);
                 em.merge(newUser);
                 em.merge(bus);
                 return newUser;
             } // else no bus, same as following
+        } else {
+            // no existing bus, create new bus
+            Bus bus = bmsbl.register(busNo, direction, busStop.getLongitude(), busStop.getLatitude(), time, busStop);
+            bus.getUserList().add(newUser);
+            newUser.setBus(bus);
+            em.merge(newUser);
+            em.merge(bus);
+            return newUser;
         }
-        
-        // no existing bus, create new bus
-        Bus bus = bmsbl.register(busNo, direction, busStop.getLongitude(), busStop.getLatitude(), time, busStop);
-        bus.getUserList().add(newUser);
-        newUser.setBus(bus);
-        em.merge(newUser);
-        em.merge(bus);
-        return newUser;
+        return null;
     }
 
     @Override
     public BusData updateRecord(Long userId, Double latitude, Double longitude, Double speed) {
+        System.out.println("dmsb: initiate update raw data");
         //find user first
         User user = em.find(User.class, userId);
         Bus bus = user.getBus();
         // this is a web service. return the busid as a success reply
-        
+
         Date now = new Date();
         Timestamp time = new Timestamp(now.getTime());//get current time
-        
+
         BusData busData = new BusData(bus.getId(), bus.getBusNo(), bus.getDirection(), latitude, longitude, speed, time);
-        
+
         em.persist(busData);
-        
+
         return busData;
     }
-    
+
     @Override
     public Boolean archiveData(List<BusData> busDataList) {
         for (BusData b : busDataList) {
@@ -111,7 +113,7 @@ public class DataManagementSessionBean implements DataManagementSessionBeanLocal
         }
         return true;
     }
-    
+
     private BusStop findBusStop(Double lat, Double lon) {
         Query q = em.createQuery("SELECT b FROM BusStop b WHERE b.latitude>:lat1 AND b.latitude<:lat2 AND b.longitude>:lon1 AND b.longitude<:lon2");
         q.setParameter("lat1", lat - 0.01);
@@ -181,8 +183,7 @@ public class DataManagementSessionBean implements DataManagementSessionBeanLocal
         dist_m = Math.sqrt(Math.pow(deltaLat * m_per_deg_lat, 2) + Math.pow(deltaLon * m_per_deg_lon, 2));
         return dist_m;
     }
-    
-    
+
     // for test
     public int getCustomerCount() {
         return 10;

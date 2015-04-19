@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>BusBooster</title>
+        <link rel="stylesheet" href="themes/Bootstrap.css">
+        <link rel="stylesheet" href="resources/css/jqm-icon-pack-fa.css">
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.0/jquery.mobile.structure-1.4.0.min.css" />
+        <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script>
+        <script>
+            $(function () {
+                $("#myride").click(function () {
+                    if (localStorage.getItem("onboard") === "Y") {
+                        window.location.href = "myride_onboard.html?busNo=" + localStorage.getItem("busNo") + "&busStopNo=" + localStorage.getItem("currentBusStopNo") + "&direction=" + localStorage.getItem("direction");
+                    } else {
+                        window.location.href = "myride.html";
+                    }
+                });
+                $("#alight").click(function () {
+                    localStorage.removeItem("onboard");
+                    localStorage.removeItem("busNo");
+                    localStorage.removeItem("direction");
+                    window.location.href = "myride.html";
+                });
+
+                function getUrlParameter(sParam)
+                {
+                    var sPageURL = window.location.search.substring(1);
+                    var sURLVariables = sPageURL.split('&');
+                    for (var i = 0; i < sURLVariables.length; i++)
+                    {
+                        var sParameterName = sURLVariables[i].split('=');
+                        if (sParameterName[0] == sParam)
+                        {
+                            return sParameterName[1];
+                        }
+                    }
+                }
+                var breakDown = getUrlParameter('breakDown');
+                var delay = getUrlParameter('delay');
+                var comment = getUrlParameter('comment');
+
+                var getResultURL = "http://localhost:8080/BusBooster-war/webresources/sendFeedback?userId=" + localStorage.getItem("userId") + "&busId=" + localStorage.getItem("busId") + "&breakDown=" + breakDown + "&delay=" + delay + "&comment=" + comment;
+                $.getJSON(getResultURL, function (data) {
+                        if (data.username === "Success") {
+                            $("#info").append('<div class="ui-block"><button data-theme="d">Submit Successful!</button></div>');
+                        } else {
+                            $("#info").append('<div class="ui-block"><button data-theme="c">Submit Failed!</button></div>');
+                        }
+//                        alert(item.id + " , " + item.busId);
+                });
+
+                $("#back").click(function () {
+                    window.location.href = "myride_onboard.html?busNo=" + localStorage.getItem("busNo") + "&busStopNo=" + localStorage.getItem("currentBusStopNo") + "&direction=" + localStorage.getItem("direction");
+                });
+
+            });
+        </script>
+    </head>
+    <body>
+        <div data-role="page" data-theme="a">
+            <div data-role="header" data-position="inline">
+                <h1>BusBooster</h1>
+                <div data-role="navbar">
+                    <ul>
+                        <li><a data-ajax="false" href="index.html" data-icon="location-arrow">Near Me</a></li>
+                        <li><a data-ajax="false" href="favorite.html" data-icon="star">Feedback</a></li>
+                        <li><a id="myride" data-ajax="false" href="" data-icon="user" class="ui-btn-active">My Ride</a></li>
+                        <li><a data-ajax="false" href="map.html" data-icon="map-marker">Map</a></li>
+                        <li><a data-ajax="false" href="settings.html" data-icon="gear">Settings</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div data-role="content" data-theme="a">
+
+                <div data-role="header" data-position="inline">
+                    <h1>Travelling on A1</h1>
+                    <a id="alight" href="" data-icon="arrow-left" data-theme="c">Alight</a>
+                </div>
+                <hr />
+                <a id="back" data-ajax="false" data-role="button" data-icon="arrow-left">Back</a>
+
+                <div id="info" class="ui-body ui-body-a">                    
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

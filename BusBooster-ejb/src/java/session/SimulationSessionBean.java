@@ -50,7 +50,11 @@ public class SimulationSessionBean implements SimulationSessionBeanLocal {
     public Boolean createNewBus(String busNo, String direction, List<Integer> dwells, List<Integer> speeds) {
         Date now = new Date();
         BusStop startStop = this.getBusStop("1");
+        System.out.println("ssb: start stop name: "+startStop.getBusStopName());
+        
         BusStop endStop = this.getBusStop("2");
+        System.out.println("ssb: next stop name: "+endStop.getBusStopName());
+        
         Bus bus = new Bus(busNo, direction, startStop.getLatitude(), startStop.getLongitude(), startStop, endStop);
         bus.setDistanceFromPreviousStop(0.0);
         bus.setDistanceToNextStop(startStop.getDistanceToNextStop());
@@ -63,7 +67,7 @@ public class SimulationSessionBean implements SimulationSessionBeanLocal {
         bus.setNumberOfUserOnboard(bus.getUserList().size());
         em.merge(bus);
         em.merge(user);
-        
+        dmsbl.updateRecord(user.getId(), bus.getLatitude(), bus.getLongitude(), 0.0);
         System.out.println("check size " + dwells.size());
 
         SimulationInfo si = new SimulationInfo(user.getId(), bus.getId(), busNo, direction, dwells, speeds);
@@ -90,12 +94,25 @@ public class SimulationSessionBean implements SimulationSessionBeanLocal {
         String info = timer.getInfo().toString();
         String[] temp = info.split("s");
         Long busId = Long.valueOf(temp[1]);
-        System.out.println("Bus id is " + busId);
+//        System.out.println("Bus id is " + busId);
         Long siId = Long.valueOf(temp[2]);
-        System.out.println("simulation id is " + siId);
+//        System.out.println("simulation id is " + siId);
         Bus bus = em.find(Bus.class, busId);
+        if(bus == null) {
+            System.out.println("ssb: bus does not exist!");
+            Collection<Timer> timers = timerService.getTimers();
+                for (Timer t : timers) {
+                    //look for the server timer
+                    if ((t.getInfo().toString().startsWith("s" + bus.getId() + "s"))) {
+                        System.out.println("ssb: timer found!");
+                        t.cancel();
+                        break;
+                    }
+                }
+            return;
+        }
         SimulationInfo si = em.find(SimulationInfo.class, siId);
-        System.out.println(si.getDwells().size());
+//        System.out.println(si.getDwells().size());
         Query q = em.createQuery("SELECT r FROM Route r ORDER BY r.id ASC");
         List<Route> routeList = new ArrayList(q.getResultList());
 
@@ -108,14 +125,14 @@ public class SimulationSessionBean implements SimulationSessionBeanLocal {
             if (total > current) {
                 busStopsAt = i + 1;//bus stop number starts at 1
                 routeNo = 0;
-                System.out.println("stop: break at i = " + i);
+//                System.out.println("stop: break at i = " + i);
                 break;
             }
             total += routeList.get(i).getDistance() / si.getSpeeds().get(i);
             if (total > current) {
                 routeNo = i + 1;// route number starts at 1
                 busStopsAt = 0;
-                System.out.println("travel: break at i = " + i);
+//                System.out.println("travel: break at i = " + i);
                 break;
             }
             if (i == 14) {
@@ -137,7 +154,7 @@ public class SimulationSessionBean implements SimulationSessionBeanLocal {
         }
         if (routeNo > 0 && busStopsAt == 0) {
             // bus is travelling, calculate all dwell time
-            System.out.println("bus travels: update location");
+            System.out.println("ssb: bus travels "+routeNo);
             int totalDwell = 0;
             int totalDistance = 0;
             int travelTime = 0;
@@ -171,7 +188,7 @@ public class SimulationSessionBean implements SimulationSessionBeanLocal {
 
         } else if (routeNo == 0 && busStopsAt > 0) {
             // bus is stops at bus stop
-            System.out.println("bus stops: update location");
+            System.out.println("ssb: bus stops "+busStopsAt);
 //            Query query = em.createQuery("SELECT b FROM BusStop b WHERE b.busStopNo=:number");
 //            query.setParameter("number", busStopsAt);
             BusStop busStop = this.getBusStop((new Integer(busStopsAt)).toString());

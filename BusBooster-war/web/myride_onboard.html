@@ -9,6 +9,78 @@
         <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.0/jquery.mobile.structure-1.4.0.min.css" />
         <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
         <script src="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script>
+        <script>
+            $(function () {
+                $("#myride").click(function () {
+                    if (localStorage.getItem("onboard") === "Y") {
+                        window.location.href = "myride_onboard.html?busNo=" + localStorage.getItem("busNo") + "&busStopNo=" + localStorage.getItem("currentBusStopNo") + "&direction=" + localStorage.getItem("direction");
+                    } else {
+                        window.location.href = "myride.html";
+                    }
+                });
+                $("#alight").click(function () {
+                    localStorage.removeItem("onboard");
+                    localStorage.removeItem("busNo");
+                    localStorage.removeItem("direction");
+                    lcoalStorage.removeItem("userId");
+                    localStorage.removeItem("busId");
+                    window.location.href = "myride.html";
+                });
+
+                function getUrlParameter(sParam)
+                {
+                    var sPageURL = window.location.search.substring(1);
+                    var sURLVariables = sPageURL.split('&');
+                    for (var i = 0; i < sURLVariables.length; i++)
+                    {
+                        var sParameterName = sURLVariables[i].split('=');
+                        if (sParameterName[0] == sParam)
+                        {
+                            return sParameterName[1];
+                        }
+                    }
+                }
+                var busStopNo = getUrlParameter('busStopNo');
+                var busNo = getUrlParameter('busNo');
+                var direction = getUrlParameter('direction');
+                var flag = localStorage.getItem("flag");
+                if (flag === "true") {
+                    var getResultURL = "http://localhost:8080/BusBooster-war/webresources/sendInfo?busNo=" + busNo + "&busStopNo=" + busStopNo + "&direction=" + direction;
+                    $.getJSON(getResultURL, function (data) {
+                            localStorage.setItem("userId", data.userId);
+                            localStorage.setItem("busId", data.busId);
+                            alert(data.userId + " , " + data.busId);
+                            localStorage.setItem("flag", "false");
+                    });
+                }
+                $("#submit").click(function () {
+                    window.location.href = "myride_feedback.html?userId=" + localStorage.getItem("userId") + "&busId=" + localStorage.getItem("busId") + "&breakDown=" + $("#breakDown").val() + "&delay=" + $("#delay").val() + "&comment=" + $("#comment").val();
+                });
+//                $("#userId").val(localStorage.getItem("userId"));
+//                $("#busId").val(localStorage.getItem("busId"));
+
+
+//                var Vars = {userId: localStorage.getItem("userId"), busId: localStorage.getItem("busId")};
+//                var varsData = $.param(Vars);
+
+                // form data
+//                    var formData = $('#feedback').serialize();
+
+//                var data = varsData + '&' + formData;
+//                    var data = formData;
+//
+//                    $.ajax({
+//                        type: 'POST',
+//                        url: 'http://localhost:8080/BusBooster-war/webresources/sendFeedback',
+//                        data: data,
+//                        success: function (res) {
+//                            alert(res);
+//                        }
+//                    });
+
+
+            });
+        </script>
     </head>
     <body>
         <div data-role="page" data-theme="a">
@@ -18,7 +90,7 @@
                     <ul>
                         <li><a data-ajax="false" href="index.html" data-icon="location-arrow">Near Me</a></li>
                         <li><a data-ajax="false" href="favorite.html" data-icon="star">Feedback</a></li>
-                        <li><a data-ajax="false" href="myride.html" data-icon="user" class="ui-btn-active">My Ride</a></li>
+                        <li><a id="myride" data-ajax="false" href="" data-icon="user" class="ui-btn-active">My Ride</a></li>
                         <li><a data-ajax="false" href="map.html" data-icon="map-marker">Map</a></li>
                         <li><a data-ajax="false" href="settings.html" data-icon="gear">Settings</a></li>
                     </ul>
@@ -28,34 +100,35 @@
 
                 <div data-role="header" data-position="inline">
                     <h1>Travelling on A1</h1>
-                    <a href="myride.html" data-icon="arrow-left" data-theme="c">Alight</a>
+                    <a id="alight" href="" data-icon="arrow-left" data-theme="c">Alight</a>
                 </div>
                 <hr />
 
                 <div class="ui-body ui-body-a">
-                    <form action="/BusBooster-war/webresources/sendInfo" method="post">
-                        <h3>Feedback on traffic</h3>
+                    <h3>Feedback on traffic</h3>
+                    <input type="hidden" name="userId" id="userId" />
+                    <input type="hidden" name="busId" id="busId" />
 
-                        <div data-role="fieldcontain">
-                            <label for="slider2">Bus Broken Down?</label>
-                            <select name="slider2" id="slider2" data-role="slider">
-                                <option value="no">No</option>
-                                <option value="yes">Yes</option>
-                            </select>
-                        </div>
-                        <h4>Traffic Jam Encountered? </h4>
-                        <div data-role="fieldcontain">
-                            <label for="slider">Estimated delay:</label>
-                            <input type="range" name="slider" id="slider" value="0" min="0" max="30" data-highlight="true"  />
-                        </div>
+                    <div data-role="fieldcontain">
+                        <label for="breakDown">Bus Broken Down?</label>
+                        <select name="breakDown" id="breakDown" data-role="slider">
+                            <option value="N">No</option>
+                            <option value="Y">Yes</option>
+                        </select>
+                    </div>
+                    <hr />
+                    <h4>Traffic Jam Encountered? </h4>
+                    <div data-role="fieldcontain">
+                        <label for="delay">Estimated delay:</label>
+                        <input type="range" name="delay" id="delay" value="0" min="0" max="30" data-highlight="true"  />
+                    </div>
 
-                        <div data-role="fieldcontain">
-                            <label for="textarea">Comments:</label>
-                            <textarea cols="40" rows="10" name="textarea" id="textarea"></textarea>
-                        </div>
+                    <div data-role="fieldcontain">
+                        <label for="comment">Comments:</label>
+                        <input type="text" name="comment" id="comment" value="" />
+                    </div>
 
-                        <div class="ui-block"><button type="submit" data-theme="d">Submit</button></div>
-                    </form>
+                    <div class="ui-block"><button id="submit" type="submit" data-theme="d">Submit</button></div>
                 </div>
             </div>
         </div>

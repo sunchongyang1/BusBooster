@@ -16,10 +16,13 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 import session.PopulateDataManagementSessionBeanLocal;
 import session.PredictionManagementSessionBeanLocal;
 
@@ -48,15 +51,17 @@ public class GetBusStopResource {
 
     /**
      * Retrieves representation of an instance of services.GetBusStopResource
+     * @param lat
+     * @param lon
      * @return an instance of java.lang.String
      */
     @GET
     @Produces({"application/json","application/xml"})
-    public List<BusStopSimple> getJson() {
+    public List<BusStopSimple> getJson(@QueryParam("lat") Double lat, @QueryParam("lon") Double lon) {
         pdmsbl.populateBusStop();
 //        System.out.println("after populate");
-        List<BusStop> busStopList = pmsbl.getNearbyBusStop(1.293357, 103.775188);
-        System.out.println(busStopList);
+        List<BusStop> busStopList = pmsbl.getNearbyBusStop(lat, lon);
+//        System.out.println(busStopList);
         List<BusStopSimple> busStopSimpleList = new ArrayList();
         for(BusStop b: busStopList) {
             BusStopSimple temp = new BusStopSimple(b.getId(), b.getBusStopName(), b.getBusStopNo(), b.getLatitude(), b.getLongitude(), 

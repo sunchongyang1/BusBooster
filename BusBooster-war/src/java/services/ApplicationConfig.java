@@ -33,6 +33,7 @@ public class ApplicationConfig extends Application {
         resources.add(services.GetBusStopListResource.class);
         resources.add(services.GetBusStopResource.class);
         resources.add(services.GetPredictionResource.class);
+        resources.add(services.SendFeedbackResource.class);
         resources.add(services.SendInfoResource.class);
     }
     

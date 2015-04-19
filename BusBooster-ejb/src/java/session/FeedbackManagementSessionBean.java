@@ -24,14 +24,19 @@ public class FeedbackManagementSessionBean implements FeedbackManagementSessionB
     private EntityManager em;
     
     @Override
-    public Feedback createFeedback(Long userId, Long busId, Boolean busBreakDown, Boolean trafficJam, Integer delay) {
+    public Feedback createFeedback(Long userId, Long busId, Boolean busBreakDown, Boolean trafficJam, Integer delay, String comment) {
         User user = em.find(User.class, userId);
         Bus bus = em.find(Bus.class, busId);
+        if(user == null || bus == null) {
+            System.out.println("failed to create feedback");
+            return null;
+        }
         Feedback feedback = new Feedback(userId, busId, bus.getBusNo(), bus.getDirection(), bus.getLatitude(), bus.getLongitude());
         em.persist(feedback);
         feedback.setIsBusBreakDown(busBreakDown);
         feedback.setTrafficJam(trafficJam);
         feedback.setDelay(delay);
+        feedback.setComment(comment);
         em.merge(feedback);
         return feedback;
     }

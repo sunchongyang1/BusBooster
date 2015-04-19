@@ -20,8 +20,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.QueryParam;
 import session.BusManagementSessionBeanLocal;
 import session.FeedbackManagementSessionBeanLocal;
+import session.PredictionManagementSessionBeanLocal;
 
 /**
  * REST Web Service
@@ -39,6 +41,8 @@ public class BusDataSources {
     BusManagementSessionBeanLocal bmsbl;
     @Inject
     FeedbackManagementSessionBeanLocal fmsbl;
+    @Inject
+    PredictionManagementSessionBeanLocal pmsbl;
 
     /**
      * Creates a new instance of BusDataSources
@@ -52,12 +56,18 @@ public class BusDataSources {
      */
     @GET
     @Produces("application/json")
-    public List<BusSimple> getJson() {
+    public List<BusSimple> getJson(@QueryParam("busStopNo") String busStopNo) {
         //TODO return proper representation object
         List<Bus> buses = bmsbl.getAllBuses();
         List<BusSimple> result = new ArrayList();
         for(Bus b: buses) {
-            BusSimple temp = new BusSimple(b.getBusNo(), b.getDirection(), b.getLatitude(), b.getLongitude(), 0, fmsbl.getDelayFromFeedback(b.getId()), fmsbl.isBusBreakDown(b.getId()), b.getNumberOfUserOnboard());
+            BusSimple temp = new BusSimple(b.getBusNo(), b.getDirection(), b.getLatitude(), b.getLongitude(), pmsbl.getArrivalTime(busStopNo, b).intValue(), fmsbl.getDelayFromFeedback(b.getId()), fmsbl.isBusBreakDown(b.getId()), b.getNumberOfUserOnboard());
+            
+//            temp.setArrivalTime(pmsbl.getArrivalTime(busStopNo, bus).intValue());
+//            temp.setNumberOfUserOnboard(bus.getNumberOfUserOnboard());
+//            temp.setDelay(fmsbl.getDelayFromFeedback(bus.getId()));
+//            temp.setBusBreakDown(fmsbl.isBusBreakDown(bus.getId()));
+            
             result.add(temp);
         }
         return result;

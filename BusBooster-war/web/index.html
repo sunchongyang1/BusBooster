@@ -10,17 +10,36 @@
         <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
         <script src="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script>
         <script>
+            if (typeof (Storage) !== "undefined") {
+                // Store
+                var lat = localStorage.getItem("lat");
+                var lon = localStorage.getItem("lon");
+                // Retrieve
+            } else {
+                alert("web browser does not support local storage!");
+            }
+                
             $(function () {
-                var getBusStopListURL = "http://localhost:8080/BusBooster-war/webresources/getBusStop";
-                    $.getJSON(getBusStopListURL, function (data) {
-                        var $ul = $('#busStopList');
-                        $.each(data, function (idx, item) {
+                var getBusStopListURL = "http://localhost:8080/BusBooster-war/webresources/getBusStop?lat="+lat+"&lon="+lon;
+                $.getJSON(getBusStopListURL, function (data) {
+                    var $ul = $('#busStopList');
+                    $.each(data, function (idx, item) {
 //                            $ul.append('<li style="color: ' + item.color + '">' + item.name + '-' + item['class'] + '</li>')
-                            $ul.append('<a href="busList.html?busStopNo='+ item.busStopNo +'&busStopName='+item.busStopName+'" data-role="button" data-ajax="false" data-theme="a" data-icon="arrow-right" class="ui-link ui-btn ui-btn-a ui-icon-arrow-right ui-btn-icon-left ui-shadow ui-corner-all" role="button">'+ item.busStopName +'</a>')
-                        });
+                        $ul.append('<a href="busList.html?busStopNo=' + item.busStopNo + '&busStopName=' + item.busStopName + '" data-role="button" data-ajax="false" data-theme="a" data-icon="arrow-right" class="ui-link ui-btn ui-btn-a ui-icon-arrow-right ui-btn-icon-left ui-shadow ui-corner-all" role="button">' + item.busStopName + '</a>')
+                        if(idx === 0) {
+                            localStorage.setItem("currentBusStopNo", item.busStopNo);
+                        }
                     });
-                $("#refresh").click(function(){
+                });
+                $("#refresh").click(function () {
                     location.reload();
+                });
+                $("#myride").click(function () {
+                    if(localStorage.getItem("onboard") === "Y") {
+                        window.location.href = "myride_onboard.html?busNo="+localStorage.getItem("busNo")+"&busStopNo="+localStorage.getItem("currentBusStopNo")+"&direction="+localStorage.getItem("direction");
+                    } else {
+                        window.location.href = "myride.html";
+                    }
                 });
             });
         </script>
@@ -33,7 +52,7 @@
                     <ul>
                         <li><a data-ajax="false" href="index.html" data-icon="location-arrow" class="ui-btn-active">Near Me</a></li>
                         <li><a data-ajax="false" href="favorite.html" data-icon="star">Feedback</a></li>
-                        <li><a data-ajax="false" href="myride.html" data-icon="user">My Ride</a></li>
+                        <li><a id="myride" data-ajax="false" href="" data-icon="user">My Ride</a></li>
                         <li><a data-ajax="false" href="map.html" data-icon="map-marker">Map</a></li>
                         <li><a data-ajax="false" href="settings.html" data-icon="gear">Settings</a></li>
                     </ul>
@@ -41,6 +60,7 @@
             </div>
             <div data-role="content" data-theme="a">
                 <button id="refresh" data-icon="star" data-role="button">Refresh</button>
+                <a data-ajax="false" href="location.html" data-role="button" data-icon="arrow-left">Change Location (Prototype)</a>
 
                 <h3> Bus Stop Near By </h3>
                 <hr />

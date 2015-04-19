@@ -37,6 +37,8 @@ public class Feedback implements Serializable {
     private Double longitude;
     private Integer delay;
     
+    private String comment;
+    
     private Boolean isBusBreakDown;
     private Boolean trafficJam;
     
@@ -268,6 +270,20 @@ public class Feedback implements Serializable {
      */
     public void setTrafficJam(Boolean trafficJam) {
         this.trafficJam = trafficJam;
+    }
+
+    /**
+     * @return the comment
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * @param comment the comment to set
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
     }
     
 }

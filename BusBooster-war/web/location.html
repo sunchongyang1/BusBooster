@@ -13,12 +13,10 @@
             $(function () {
                 $("#submit").click(function () {
                     if (typeof (Storage) !== "undefined") {
-                        var busStopNo = localStorage.getItem("currentBusStopNo");
-                        localStorage.setItem("onboard","Y");
-                        localStorage.setItem("busNo", $("#busNo").val());
-                        localStorage.setItem("direction",$("#direction").val());
-                        localStorage.setItem("flag", "true");
-                        window.location.href = "myride_onboard.html?busNo="+$("#busNo").val()+"&busStopNo="+busStopNo+"&direction="+$("#direction").val();
+                        // Store
+                        localStorage.setItem("lat", $("#lat").val());
+                        localStorage.setItem("lon", $("#lon").val());
+                        window.location.href = "index.html";
                     } else {
                         alert("web browser does not support local storage!");
                     }
@@ -41,7 +39,7 @@
                     <ul>
                         <li><a data-ajax="false" href="index.html" data-icon="location-arrow">Near Me</a></li>
                         <li><a data-ajax="false" href="favorite.html" data-icon="star">Feedback</a></li>
-                        <li><a id="myride" data-ajax="false" href="" data-icon="user" class="ui-btn-active">My Ride</a></li>
+                        <li><a id="myride" data-ajax="false" href="" data-icon="user">My Ride</a></li>
                         <li><a data-ajax="false" href="map.html" data-icon="map-marker">Map</a></li>
                         <li><a data-ajax="false" href="settings.html" data-icon="gear">Settings</a></li>
                     </ul>
@@ -49,22 +47,22 @@
             </div>
             <div data-role="content" data-theme="a">
 
-                <form action="/myride_onboard.html" method="get">
+                <div data-role="fieldcontain">
+                    <label for="lat">Latitude:</label>
+                    <input type="text" name="lat" id="lat" value="1.293357"  />
+                </div>
 
-                    <div data-role="fieldcontain">
-                        <label for="busNo">Bus Number:</label>
-                        <input type="text" name="busNo" id="busNo" value="A1"  />
-                    </div>
+                <div data-role="fieldcontain">
+                    <label for="lon">Longitude:</label>
+                    <input type="text" name="lon" id="lon" value="103.775188"  />
+                </div>
 
-                    <div data-role="fieldcontain">
-                        <label for="direction">Direction:</label>
-                        <input type="text" name="direction" id="direction" value="SCI-BIZ-PGP"  />
-                    </div>
-                    
-                    <div class="ui-block">
-                        <a data-ajax="false" id="submit" data-role="button" data-theme="d">Submit</a>
-                    </div>
-                </form>
+
+                <div class="ui-block">
+                    <button id="submit"  data-theme="d">Submit</button>
+                    <a data-ajax="false" href="index.html" data-role="button" data-icon="arrow-right">Back to List</a>
+                </div>
+
 
             </div>
         </div>

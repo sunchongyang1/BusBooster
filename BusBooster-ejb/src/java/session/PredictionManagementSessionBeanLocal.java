@@ -25,8 +25,8 @@ public interface PredictionManagementSessionBeanLocal {
     public List<BusStop> getNearbyBusStop(Double lat, Double lon);
     public List<BusRoute> getBusRouteByBusStop(String busStopNumber);
     
-    public Double getArrivalTime(String busStopNumber, String busNo);
-    public Double getArrivalTimeBasic(String busStopNumber, String busNo);
+    public Double getArrivalTime(String busStopNumber, Bus bus);
+    public Double getArrivalTimeBasic(String busStopNumber, Bus bus);
     public Bus getNearestBus(String busStopNumber, String busNo);
     public List<Feedback> getFeedback(Bus bus);
 }
