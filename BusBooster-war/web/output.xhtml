@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Performance output</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+            <h:form id="outputForm">
+            <p:growl id="growl" life="2000" />
+     
+            <p:commandButton update="outputForm" value="Refresh" id="ajax" actionListener="#{serverManagedBean.refreshOutput()}" />
+    
+            <p:dataTable id="outputTable" var="output" value="#{serverManagedBean.outputs}">
+                <p:column headerText="Bus Route Number">
+                    <h:outputText value="#{output.busNo}" />
+                </p:column>
+
+                <p:column headerText="Bus Stop Number">
+                    <h:outputText value="#{output.busStopNo}" />
+                </p:column>
+
+                <p:column headerText="Bus Stop Name">
+                    <h:outputText value="#{output.busStopName}" />
+                </p:column>
+
+                <p:column headerText="Actual Arrival Time (s)">
+                    <h:outputText value="#{output.arrivalTimeActual}" />
+                </p:column>
+                
+                <p:column headerText="Arrival Time Hybrid Model (s)">
+                    <h:outputText value="#{output.arrivalTimeHybrid}" />
+                </p:column>
+                
+                <p:column headerText="Arrival Time Basic Model (s)">
+                    <h:outputText value="#{output.arrivalTimeBasic}" />
+                </p:column>
+                
+                <p:column headerText="Variance Hybrid Model">
+                    <h:outputText value="#{output.varianceHybrid}" />
+                </p:column>
+                
+                <p:column headerText="Variance Basic Model">
+                    <h:outputText value="#{output.varianceBasic}" />
+                </p:column>
+            </p:dataTable>
+</h:form>
+        </h:body>
+
+    </f:view>
+</html>
+

@@ -27,6 +27,7 @@ public interface PredictionManagementSessionBeanLocal {
     
     public Double getArrivalTime(String busStopNumber, Bus bus);
     public Double getArrivalTimeBasic(String busStopNumber, Bus bus);
+    public Double getArrivalTimeActual(String busStopNumber, Bus bus);
     public Bus getNearestBus(String busStopNumber, String busNo);
     public List<Feedback> getFeedback(Bus bus);
 }

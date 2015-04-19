@@ -5,6 +5,8 @@
  */
 package session;
 
+import entity.Output;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -15,4 +17,5 @@ import javax.ejb.Local;
 public interface ServerManagementSessionBeanLocal {
     public Boolean startServer();
     public Boolean stopServer();
+    public List<Output> getOutput();
 }

@@ -5,9 +5,12 @@
  */
 package ManagedBean;
 
+import entity.Output;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -25,8 +28,12 @@ public class ServerManagedBean implements Serializable {
     @EJB
     ServerManagementSessionBeanLocal smsbl;
     
+    private List<Output> outputs;
+    
     @PostConstruct
-    public void init(){}
+    public void init(){
+        outputs = new ArrayList();
+    }
     
     /**
      * Creates a new instance of ServerManagedBean
@@ -50,6 +57,16 @@ public class ServerManagedBean implements Serializable {
         }
     }
     
+    public void refreshOutput() {
+        outputs = smsbl.getOutput();
+        System.out.println("managedbean: outputs "+outputs);
+        if(outputs == null) {
+            this.errorMsg("Update failed!");
+        } else {
+            this.faceMsg("Update success!");
+        }
+    }
+    
     private void faceMsg(String message) {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, message, "");
         FacesContext context = FacesContext.getCurrentInstance();
@@ -70,4 +87,13 @@ public class ServerManagedBean implements Serializable {
         context.addMessage(null, msg);
         context.getExternalContext().getFlash().setKeepMessages(true);
     }
+
+    public List<Output> getOutputs() {
+        return outputs;
+    }
+
+    public void setOutputs(List<Output> outputs) {
+        this.outputs = outputs;
+    }
+    
 }

@@ -12,6 +12,7 @@ import entity.BusRoute;
 import entity.BusStop;
 import entity.DepartureTime;
 import entity.Feedback;
+import entity.SimulationInfo;
 import entity.User;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -407,7 +408,6 @@ public class PredictionManagementSessionBean implements PredictionManagementSess
 //            for (int p = 0; p < dwellListEach.size(); p++) {
 //                System.out.println("pmsb: dwell list each for stop " + d.getBusStopName() + " is " + dwellListEach.get(p));
 //            }
-
             // calculate expected dwell time
             double dwell = 0.0;
             for (int j = 0; j < dwellListEach.size(); j++) {
@@ -458,7 +458,7 @@ public class PredictionManagementSessionBean implements PredictionManagementSess
          * to calculate arrivalTIme2
          */
         if (bus.getAtStop()) {
-            if(bus.getPreviousStop().getBusStopNo().equals(busStopNumber)) {
+            if (bus.getPreviousStop().getBusStopNo().equals(busStopNumber)) {
                 return 0.0;
             }
             int s;
@@ -496,8 +496,8 @@ public class PredictionManagementSessionBean implements PredictionManagementSess
             for (int j = 0; j < travelListEach.size(); j++) {
                 travel += alpha * Math.pow(1 - alpha, j) * travelListEach.get(j);
             }
-            
-            arrivalTime2 = dwell+travel * (bus.getDistanceToNextStop() / bus.getPreviousStop().getDistanceToNextStop());
+
+            arrivalTime2 = dwell + travel * (bus.getDistanceToNextStop() / bus.getPreviousStop().getDistanceToNextStop());
         } else if (!bus.getAtStop() && bus.getSpeed() != 0.0) {
             arrivalTime2 = bus.getDistanceToNextStop() / bus.getSpeed();
         } else {
@@ -538,52 +538,134 @@ public class PredictionManagementSessionBean implements PredictionManagementSess
         List<BusStop> busStopList = busRoute.getBusStopList();
         // create new list contains all bus stop before current bus stop(included) !!!inverse sequence!!!
         // temp list contains bus stop in the sequence of the distance from current bus stop from closest to farthest
-        List<BusStop> temp = new ArrayList();
-        for (int i = 0; i < busStopList.size(); i++) {
-            if (temp.isEmpty()) {
-                temp.add(busStopList.get(i));
-            } else if (Integer.valueOf(busStopList.get(i).getBusStopNo()) <= Integer.valueOf(busStopNumber)
-                    && Integer.valueOf(busStopList.get(i).getBusStopNo()) > Integer.valueOf(temp.get(0).getBusStopNo())) {
-                temp.add(0, busStopList.get(i));
-            } else if (Integer.valueOf(busStopList.get(i).getBusStopNo()) < Integer.valueOf(busStopNumber)) {
-                for (int j = 0; j < temp.size(); j++) {
-                    if (Integer.valueOf(busStopList.get(i).getBusStopNo()) > Integer.valueOf(temp.get(j).getBusStopNo())) {
-                        temp.add(temp.indexOf(temp.get(j)), busStopList.get(i));
-                    }
-                }
-            }
-        }
+//        List<BusStop> temp = new ArrayList();
+//        for (int i = 0; i < busStopList.size(); i++) {
+//            if (temp.isEmpty()) {
+//                temp.add(busStopList.get(i));
+//            } else if (Integer.valueOf(busStopList.get(i).getBusStopNo()) <= Integer.valueOf(busStopNumber)
+//                    && Integer.valueOf(busStopList.get(i).getBusStopNo()) > Integer.valueOf(temp.get(0).getBusStopNo())) {
+//                temp.add(0, busStopList.get(i));
+//            } else if (Integer.valueOf(busStopList.get(i).getBusStopNo()) < Integer.valueOf(busStopNumber)) {
+//                for (int j = 0; j < temp.size(); j++) {
+//                    if (Integer.valueOf(busStopList.get(i).getBusStopNo()) > Integer.valueOf(temp.get(j).getBusStopNo())) {
+//                        temp.add(temp.indexOf(temp.get(j)), busStopList.get(i));
+//                    }
+//                }
+//            }
+//        }
 
         // now bus is the nearest bus that to be predicted the arrival time
         // arrivalTime2 is using basic model to calculate the time to arrive at the next stop of the bus 
         double arrivalTime = 0.0;
 
-        /**
-         * **************
-         * to calculate arrivalTIme1
-         */
         List<BusStop> predictionStopList = new ArrayList();
-        for (BusStop l : temp) {
-            if (l.getBusStopNo().equals(bus.getNextStop().getBusStopNo())) {
-                predictionStopList.add(0, l);
-                break;
-            } else {
-                predictionStopList.add(0, l);
-            }
+//        for (BusStop l : temp) {
+//            if (l.getBusStopNo().equals(bus.getNextStop().getBusStopNo())) {
+//                predictionStopList.add(0, l);
+//                break;
+//            } else {
+//                predictionStopList.add(0, l);
+//            }
+//        }
+        for(int i = Integer.parseInt(bus.getNextStop().getBusStopNo()); i<=Integer.parseInt(busStopNumber); i++) {
+            predictionStopList.add(busStopList.get(i-1));
         }
+
+//        if(bus.getAtStop()) {
+//            predictionStopList.add(0, bus.getPreviousStop());
+//        }
         // now predictionStopList contains all stop between bus and current stop
         double totalDistance = 0.0;
         for (int i = 0; i < predictionStopList.size() - 1; i++) {
             totalDistance += predictionStopList.get(i).getDistanceToNextStop();
         }
         totalDistance += bus.getDistanceToNextStop();
-        /**
-         * **************
-         * to calculate arrivalTIme2
-         */
-        arrivalTime = totalDistance / bus.getSpeed();
+        
+        if (bus.getAtStop()) {
+            int q;
+            if (bus.getNextStop().getArrivalSequence() <= bus.getPreviousStop().getDepartureSequence()) {
+                q = bus.getNextStop().getArrivalSequence();
+            } else {
+                q = bus.getPreviousStop().getDepartureSequence();
+            }
+            arrivalTime = totalDistance / (bus.getPreviousStop().getDistanceToNextStop() / ((bus.getNextStop().getArrivalTimeList().get(q-2).getArrivalTime().getTime() - bus.getPreviousStop().getDepartureTimeList().get(q-2).getDepartureTime().getTime()) / 1000));
+        } else {
+            arrivalTime = totalDistance / bus.getSpeed();
+        }
 
         return arrivalTime; // in seconds
+    }
+
+    @Override
+    public Double getArrivalTimeActual(String busStopNumber, Bus bus) {
+        if (bus.getBusNo() == null) {
+            System.out.println("pmsb: currently no bus available");
+            return -1.0;
+        }
+        // select the bus route in order to get the bus stop list
+        Query query = em.createQuery("SELECT b FROM BusRoute b WHERE b.busNo=:busno");
+        query.setParameter("busno", bus.getBusNo());
+        BusRoute busRoute = (BusRoute) query.getSingleResult();
+        List<BusStop> busStopList = busRoute.getBusStopList();
+        // create new list contains all bus stop before current bus stop(included) !!!inverse sequence!!!
+        // temp list contains bus stop in the sequence of the distance from current bus stop from closest to farthest
+//        List<BusStop> temp = new ArrayList();
+//        for (int i = 0; i < busStopList.size(); i++) {
+//            if (temp.isEmpty()) {
+//                temp.add(busStopList.get(i));
+//            } else if (Integer.valueOf(busStopList.get(i).getBusStopNo()) <= Integer.valueOf(busStopNumber)
+//                    && Integer.valueOf(busStopList.get(i).getBusStopNo()) > Integer.valueOf(temp.get(0).getBusStopNo())) {
+//                temp.add(0, busStopList.get(i));
+//            } else if (Integer.valueOf(busStopList.get(i).getBusStopNo()) < Integer.valueOf(busStopNumber)) {
+//                for (int j = 0; j < temp.size(); j++) {
+//                    if (Integer.valueOf(busStopList.get(i).getBusStopNo()) > Integer.valueOf(temp.get(j).getBusStopNo())) {
+//                        temp.add(temp.indexOf(temp.get(j)), busStopList.get(i));
+//                    }
+//                }
+//            }
+//        }
+
+        // now bus is the nearest bus that to be predicted the arrival time
+        // arrivalTime2 is using basic model to calculate the time to arrive at the next stop of the bus 
+        double arrivalTime = 0.0;
+
+        List<BusStop> predictionStopList = new ArrayList();
+//        for (BusStop l : temp) {
+//            if (l.getBusStopNo().equals(bus.getNextStop().getBusStopNo())) {
+//                predictionStopList.add(0, l);
+//                break;
+//            } else {
+//                predictionStopList.add(0, l);
+//            }
+//        }
+        for(int i = Integer.parseInt(bus.getNextStop().getBusStopNo()); i<=Integer.parseInt(busStopNumber); i++) {
+            predictionStopList.add(busStopList.get(i-1));
+        }
+
+        Query q = em.createQuery("SELECT s FROM SimulationInfo s WHERE s.busId=:id");
+        q.setParameter("id", bus.getId());
+        SimulationInfo si = (SimulationInfo) q.getSingleResult();
+        List<Integer> dwells = si.getDwells();
+        List<Integer> speeds = si.getSpeeds();
+        int totalDwell = 0;
+        double totalTravel = 0.0;
+        if (bus.getAtStop()) {
+            predictionStopList.add(0, bus.getPreviousStop());
+            for (int i = Integer.parseInt(predictionStopList.get(0).getBusStopNo()); i < Integer.parseInt(predictionStopList.get(predictionStopList.size()-1).getBusStopNo()); i++) {
+                totalDwell += dwells.get(i - 1);
+                totalTravel += busStopList.get(i - 1).getDistanceToNextStop() / speeds.get(i - 1);
+            }
+            arrivalTime = totalDwell + totalTravel;
+        } else {
+            for (int i = Integer.parseInt(predictionStopList.get(0).getBusStopNo()); i < Integer.parseInt(predictionStopList.get(predictionStopList.size()-1).getBusStopNo()); i++) {
+                totalDwell += dwells.get(i - 1);
+                totalTravel += busStopList.get(i - 1).getDistanceToNextStop() / speeds.get(i - 1);
+            }
+            totalTravel += bus.getDistanceToNextStop() / bus.getSpeed();
+            arrivalTime = totalDwell + totalTravel;
+        }
+
+        return arrivalTime;
     }
 
     private Double calculateDistance(Double lat1, Double lon1, Double lat2, Double lon2) {
@@ -613,13 +695,13 @@ public class PredictionManagementSessionBean implements PredictionManagementSess
             System.out.println("There is currently no bus available for this route!");
             return null; // no prediction returns -1 or null
         } else {
-            for(Bus p: busList) {
-                if(p.getAtStop() && p.getPreviousStop().getBusStopNo().equals(busStopNumber)) {
+            for (Bus p : busList) {
+                if (p.getAtStop() && p.getPreviousStop().getBusStopNo().equals(busStopNumber)) {
                     System.out.println("pmsb: found bus arrived!");
                     return p;
                 }
             }
-            
+
             // select the bus route in order to get the bus stop list
             Query query = em.createQuery("SELECT b FROM BusRoute b WHERE b.busNo=:busno");
             query.setParameter("busno", busNo);

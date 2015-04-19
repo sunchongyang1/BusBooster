@@ -8,6 +8,7 @@ package session;
 import entity.Bus;
 import entity.BusStop;
 import entity.Location;
+import entity.Output;
 import entity.Route;
 import entity.SimulationInfo;
 import entity.User;
@@ -73,6 +74,17 @@ public class SimulationSessionBean implements SimulationSessionBeanLocal {
         SimulationInfo si = new SimulationInfo(user.getId(), bus.getId(), busNo, direction, dwells, speeds);
         em.persist(si);
         System.out.println("SimulationInfo id " + si.getId() + " and check size " + si.getDwells().size());
+        
+        //record output
+        for(int i=2; i<15; i++) {
+            BusStop bs = this.getBusStop(String.valueOf(i));
+            int arrivalTimeHybrid = (int)(double)pmsbl.getArrivalTime(String.valueOf(i), bus);
+            int arrivalTimeBasic = (int)(double)pmsbl.getArrivalTimeBasic(String.valueOf(i), bus);
+            int arrivalTimeActual = (int)(double)pmsbl.getArrivalTimeActual(String.valueOf(i), bus);
+            Output output = new Output(busNo, String.valueOf(i), bs.getBusStopName(), arrivalTimeHybrid, arrivalTimeBasic,
+                arrivalTimeActual, (int)(double)Math.pow(arrivalTimeHybrid-arrivalTimeActual, 2), (int)(double)Math.pow(arrivalTimeBasic-arrivalTimeActual, 2));
+            em.persist(output);
+        }
 
         //start simulation
         System.out.println("Bus start running from PGP Start");

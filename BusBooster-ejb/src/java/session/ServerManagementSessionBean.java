@@ -6,6 +6,7 @@
 package session;
 
 import entity.BusData;
+import entity.Output;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -63,6 +64,13 @@ public class ServerManagementSessionBean implements ServerManagementSessionBeanL
             }
         }
         return true;
+    }
+    
+    @Override
+    public List<Output> getOutput() {
+        Query q = em.createQuery("SELECT o FROM Output o ORDER BY o.id");
+        List<Output> result = new ArrayList(q.getResultList());
+        return result;
     }
 
     //called every 10 seconds
