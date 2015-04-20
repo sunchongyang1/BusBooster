@@ -12,7 +12,17 @@
         <script src="resources/js/url.min.js"></script>
         <script>
             $(document).ready(function () {
+                var SecondsTohhmmss = function (totalSeconds) {
+                    var minutes = Math.floor(totalSeconds / 60);
+                    var seconds = totalSeconds - (minutes * 60);
 
+                    // round seconds
+                    seconds = Math.round(seconds * 100) / 100
+
+                    var result = (minutes === 0 ? " " : minutes + " min ");
+                    result += (seconds < 10 ? "0" + seconds : seconds) + " sec";
+                    return result;
+                }
 //                function getParameterByName(name) {
 //                    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
 //                    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -35,22 +45,22 @@
                 var busStopNo = getUrlParameter('busStopNo');
                 var busStopName = getUrlParameter('busStopName');
 //                document.getElementById('stopname').innerHTML="Bus Stop Name: "+busStopName;
-                $('#stopname').append('Bus Stop: '+decodeURIComponent(busStopName));
+                $('#stopname').append('Bus Stop: ' + decodeURIComponent(busStopName));
 
                 var getBusStopListURL = "http://localhost:8080/BusBooster-war/webresources/getBusStopList?busStopNo=" + busStopNo;
                 $.getJSON(getBusStopListURL, function (data) {
                     var $ul = $('#busRouteList')
                     $.each(data, function (idx, item) {
                         var prediction;
-                        if(item.arrivalTime<0) {
-                            prediction="No Bus Available";
-                        } else if(item.arrivalTime===0) {
-                            prediction="Bus Arrived!";
+                        if (item.arrivalTime < 0) {
+                            prediction = "No Bus Available";
+                        } else if (item.arrivalTime === 0) {
+                            prediction = "Bus Arrived!";
                         } else {
-                            prediction=item.arrivalTime+" seconds";
+                            prediction = SecondsTohhmmss(item.arrivalTime);
                         }
                         var breakdown;
-                        if(item.busBreakDown) {
+                        if (item.busBreakDown) {
                             breakdown = "Yes";
                         } else {
                             breakdown = "No";
@@ -62,24 +72,24 @@
                     <div class="ui-grid-a">\n\
                         <div class="ui-block-a">\n\
                             <p>Direction: ' + item.direction + '</p>\n\
-                            <h4>Possible delay by user feedback: '+item.delay+' mins</h4>\n\
-                            <h4>Is Bus Break Down? '+breakdown+'</h4>\n\
+                            <h4>Possible delay by user feedback: ' + item.delay + ' mins</h4>\n\
+                            <h4>Is Bus Break Down? ' + breakdown + '</h4>\n\
                         </div>\n\
                         <div id="prediction" class="ui-block-b">\n\
-                            <h4>Number of user onboard: '+item.numberOfUserOnboard+'</h4>\n\
-                            <a href="" data-icon="check" data-theme="b" class="ui-btn">'+prediction+'</a>\n\
+                            <h4>Number of user onboard: ' + item.numberOfUserOnboard + '</h4>\n\
+                            <a href="" data-icon="check" data-theme="b" class="ui-btn">' + prediction + '</a>\n\
                         </div>\n\
                     </div>\n\
                 </div>\n\
                 <hr />')
                     })
                 });
-                $("#refresh").click(function(){
+                $("#refresh").click(function () {
                     location.reload();
                 });
                 $("#myride").click(function () {
-                    if(localStorage.getItem("onboard") === "Y") {
-                        window.location.href = "myride_onboard.html?busNo="+localStorage.getItem("busNo")+"&busStopNo="+localStorage.getItem("currentBusStopNo")+"&direction="+localStorage.getItem("direction");
+                    if (localStorage.getItem("onboard") === "Y") {
+                        window.location.href = "myride_onboard.html?busNo=" + localStorage.getItem("busNo") + "&busStopNo=" + localStorage.getItem("currentBusStopNo") + "&direction=" + localStorage.getItem("direction");
                     } else {
                         window.location.href = "myride.html";
                     }

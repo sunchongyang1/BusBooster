@@ -13,6 +13,17 @@
         <script src="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script>
         <script type="text/javascript" src="resources/js/jquery.ui.map.full.min.js"></script>
         <script type="text/javascript">
+            var SecondsTohhmmss = function (totalSeconds) {
+                    var minutes = Math.floor(totalSeconds / 60);
+                    var seconds = totalSeconds - (minutes * 60);
+
+                    // round seconds
+                    seconds = Math.round(seconds * 100) / 100
+
+                    var result = (minutes === 0 ? " " : minutes + " min ");
+                    result += (seconds < 10 ? "0" + seconds : seconds) + " sec";
+                    return result;
+                }
             if (typeof (Storage) !== "undefined") {
                     // Store
                     var lat = localStorage.getItem("lat");
@@ -36,7 +47,7 @@
                                 'icon': new google.maps.MarkerImage("http://localhost:8080/BusBooster-war/resources/images/marker.png", null, null, null, new google.maps.Size(30, 30)),
                                 'bounds': false
                             }).mouseover(function () {
-                                $('#map_canvas').gmap('openInfoWindow', {'content': '<div><h3>' + marker.busNo + ' - Direction: '+marker.direction+'</h3><div>Arrives in ' + marker.arrivalTime + ' seconds</div></div><div><p>Number of user onboard: ' + marker.numberOfUserOnboard + '</p></div>\n\
+                                $('#map_canvas').gmap('openInfoWindow', {'content': '<div><h3>' + marker.busNo + ' - Direction: '+marker.direction+'</h3><div>Arrives in ' + SecondsTohhmmss(marker.arrivalTime) + '</div></div><div><p>Number of user onboard: ' + marker.numberOfUserOnboard + '</p></div>\n\
                             <div><p>Possible delay from feedback: '+marker.delay+' min</p></div><div><p>Is bus break down? '+marker.breakDown+'</p></div>'}, this);
                             });
                         });
@@ -55,7 +66,7 @@
                                 'icon': new google.maps.MarkerImage("http://localhost:8080/BusBooster-war/resources/images/marker.png", null, null, null, new google.maps.Size(30, 30)),
                                 'bounds': false
                             }).mouseover(function () {
-                                $('#map_canvas').gmap('openInfoWindow', {'content': '<div><h3>' + marker.busNo + ' - Direction: '+marker.direction+'</h3><div>Arrives in ' + marker.arrivalTime + ' seconds</div></div><div><p>Number of user onboard: ' + marker.numberOfUserOnboard + '</p></div>\n\
+                                $('#map_canvas').gmap('openInfoWindow', {'content': '<div><h3>' + marker.busNo + ' - Direction: '+marker.direction+'</h3><div>Arrives in ' + SecondsTohhmmss(marker.arrivalTime) + ' seconds</div></div><div><p>Number of user onboard: ' + marker.numberOfUserOnboard + '</p></div>\n\
                             <div><p>Possible delay from feedback: '+marker.delay+' min</p></div><div><p>Is bus break down? '+marker.breakDown+'</p></div>'}, this);
                             });
                         });
